@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ANIPAL</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_messages">Mesajlar</string>
+    <string name="title_explore">Keşfet</string>
+    <string name="title_add_post">Gönderi Ekle</string>
+    <string name="title_account">Hesabım</string>
+</resources>
