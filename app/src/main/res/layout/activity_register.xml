@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAF2F3"
-    tools:context=".RegisterActivity">
+    tools:context=".ViewModel.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,13 +57,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:textSize="16dp"
-                android:id="@+id/editTextUsername"
-                android:hint="Kullanıcı Adı"/>
+                android:id="@+id/editTextEmail"
+                android:hint="E-mail Adresi"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:textSize="16dp"
+                android:inputType="textPassword"
                 android:id="@+id/editTextPassword"
                 android:hint="Şifre"/>
 
@@ -71,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:inputType="textPassword"
                 android:textSize="16dp"
                 android:id="@+id/editTextPasswordConfirmation"
                 android:hint="Şifre(Tekrar)"/>

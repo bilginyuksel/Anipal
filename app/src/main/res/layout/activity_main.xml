@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAF2F3"
-    tools:context=".MainActivity">
+    tools:context=".ViewModel.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,6 +43,7 @@
             android:textSize="16dp"
             android:layout_marginTop="20dp"
             android:id="@+id/editTextPassword"
+            android:inputType="textPassword"
             android:hint="Şifre:"/>
 
         <TextView
@@ -76,6 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/linearLayoutRegister"
+            android:clickable="true"
             android:layout_gravity="center">
             <TextView
                 android:layout_width="wrap_content"

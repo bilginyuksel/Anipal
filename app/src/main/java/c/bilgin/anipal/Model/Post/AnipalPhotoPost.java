@@ -1,24 +1,24 @@
 package c.bilgin.anipal.Model.Post;
 
-public class AnipalPhotoPost extends AnipalAbstractPost implements AnipalPostPhotoController{
+public class AnipalPhotoPost extends AnipalAbstractPost{
 
-    @Override
-    public void publish() {
+    private String photoURL;
 
+    public AnipalPhotoPost(String userUUID,String photoUrl) {
+        super(userUUID);
+        this.photoURL = photoUrl;
+    }
+
+    public AnipalPhotoPost(AnipalAbstractPost post) {
+        super(post);
     }
 
     @Override
-    public AnipalAbstractPost update() {
-        return null;
+    public int getListItemType() {
+        return ListItem.TYPE_PHOTO;
     }
 
-    @Override
-    public AnipalAbstractPost like() {
-        return null;
-    }
-
-    @Override
-    public AnipalAbstractPost comment() {
-        return null;
+    public String getPhotoURL() {
+        return photoURL;
     }
 }

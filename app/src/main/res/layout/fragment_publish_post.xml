@@ -1,6 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#eaf2f3">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:text="Gönderi Ekle"
+        android:textSize="20dp"
+        android:paddingBottom="10dp"
+        android:textAlignment="center"
+        android:background="#084a81"/>
+
+    <!-- 2 pati 1 textview-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_pati"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resim Ekle"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:fontFamily="Proxima Nova Regular"
+            android:textColor="#000"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textAllCaps="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_pati"/>
+
+    </LinearLayout>
+
+    <!-- Open camera or pick from gallery -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:weightSum="2">
+
+        <!-- Open camera layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/layoutOpenCamera"
+            android:background="@drawable/rounded_white_layout"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/camera"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16dp"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Kamerayı Aç"
+               />
+        </LinearLayout>
+
+        <!-- Pick from gallery layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:clickable="true"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:id="@+id/layoutPickFromGallery"
+            android:paddingBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/rounded_white_layout"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/gallery"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16dp"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Galeriden Seç"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 2 pati 1 textview-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_pati"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bağış Barı Aç"
+            android:textStyle="bold"
+            android:textSize="22dp"
+            android:textColor="#000"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textAllCaps="true"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_pati"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_white_layout"
+        android:orientation="vertical"
+        android:layout_weight="6"
+        android:layout_margin="20dp">
+
+        <!-- Why are we donating ! -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/editTextDonationPurpose"
+                android:background="@drawable/box_layout"
+                android:paddingLeft="15dp"
+                android:hint="Bağış amacı"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:textColor="#084a81"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="7dp"
+                android:background="#fff"
+                android:text="Bağış Amacı"
+                android:textAllCaps="true"/>
+
+        </RelativeLayout>
+
+        <!-- Donation money -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/box_layout"
+                android:textColor="#000"
+                android:textSize="28dp"
+                android:id="@+id/editTextDonationPrice"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:hint="0.00 tl"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:textColor="#084a81"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
+                android:layout_marginTop="7dp"
+                android:background="#fff"
+                android:text="Bağış Miktarı"
+                android:textAllCaps="true"/>
+
+        </RelativeLayout>
+
+        <!-- Approve button -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_button"
+            android:text="Bağış Barı Oluştur"
+            android:textAllCaps="true"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/buttonCreateDonationBar"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="#fff"
+            />
+    </LinearLayout>
 </LinearLayout>

@@ -3,10 +3,22 @@ package c.bilgin.anipal.Model.User;
 public class AnipalCoin {
     // dunno its content!
     private int coin;
-    private boolean hasFirstCoin = false;
+    private int realMoney;
+
+    public AnipalCoin(){
+        // default constructor
+    }
 
     AnipalCoin(int coin){
         this.coin = coin;
-        hasFirstCoin = true;
+        realMoney = coin/100;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public int getRealMoney() {
+        return realMoney;
     }
 }

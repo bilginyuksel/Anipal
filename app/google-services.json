@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "81547383142",
+    "firebase_url": "https://anipal-3efd7.firebaseio.com",
+    "project_id": "anipal-3efd7",
+    "storage_bucket": "anipal-3efd7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81547383142:android:f8457873ef069fde2b78a7",
+        "android_client_info": {
+          "package_name": "c.bilgin.anipal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81547383142-jil3val9gn6fqds29m23a83qm0fgd6be.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "c.bilgin.anipal",
+            "certificate_hash": "af5d060758b6d4e3f6947ae35ccccca2ac9b9ad3"
+          }
+        },
+        {
+          "client_id": "81547383142-bd3fa0id2t2hl3tjlm50ep6142s7j01n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGk1bVLRLRM9BJYsiwE9b6ogNTPNCMuGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81547383142-bd3fa0id2t2hl3tjlm50ep6142s7j01n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
