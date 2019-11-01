@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout linearLayoutRegister;
     // Change username information to email information.
     private EditText editTextUsername,editTextPassword;
+    private TextView textViewForgotPassword;
     private Button buttonLogin;
     public static AnipalUser currentUser = new AnipalUser();
     private FirebaseAuth mAuth;
@@ -51,13 +53,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AnipalForgotPasswordDialog dialog = new AnipalForgotPasswordDialog(MainActivity.this);
+                dialog.show();
+            }
+        });
+
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String emailAddress = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
+                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Giriş Yapılıyor...");
 
+                progressDialog.show();
                 mAuth.signInWithEmailAndPassword(emailAddress,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -65,24 +79,19 @@ public class MainActivity extends AppCompatActivity {
                             userFuture(task.getResult().getUser().getUid());
 
                             // this progress bar almost never working.
-                            ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
-                            progressDialog.setIndeterminate(true);
-                            progressDialog.setMessage("Giriş Yapılıyor...");
-
-                            progressDialog.show();
-
+                            progressDialog.dismiss();
                             Intent i = new Intent(MainActivity.this,NavigationActivity.class);
                             startActivity(i);
                         }else{
                             // if not success
                             System.out.println("Something went wrong !");
+                            task.getException().printStackTrace();
+                            progressDialog.dismiss();
                         }
                     }
                 });
             }
         });
-
-
     }
 
 
@@ -110,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
+        textViewForgotPassword = findViewById(R.id.textViewForgotPassword);
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();

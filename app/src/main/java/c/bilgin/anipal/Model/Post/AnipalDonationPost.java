@@ -11,8 +11,13 @@ public class AnipalDonationPost extends AnipalAbstractPost{
     private HashMap<String,Integer> donators;
     private int currentDonation;
 
+    public AnipalDonationPost(){
+
+    }
+
     public AnipalDonationPost(String userUUID,String donationPurpose,int donationPrice) {
         super(userUUID);
+        // Create a new post
         this.donators = new HashMap<>();
         this.donationPurpose = donationPurpose;
         this.donationPrice = donationPrice;
@@ -20,6 +25,7 @@ public class AnipalDonationPost extends AnipalAbstractPost{
     }
 
     public AnipalDonationPost(AnipalAbstractPost post) {
+        // Get a post which it exists.
         super(post);
         this.donators = ((AnipalDonationPost)post).donators;
         this.donationPrice = ((AnipalDonationPost) post).donationPrice;
@@ -34,7 +40,9 @@ public class AnipalDonationPost extends AnipalAbstractPost{
 
     // get Donation from donators
     public AnipalDonationPost getDonation(String userUUID,int price){
-        this.donators.put(userUUID,price);
+        if(donators==null) donators = new HashMap<>();
+        donators.put(userUUID,price);
+        currentDonation += price;
         return this;
     }
 

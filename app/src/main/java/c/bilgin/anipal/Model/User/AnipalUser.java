@@ -1,27 +1,33 @@
 package c.bilgin.anipal.Model.User;
 
-
 import com.google.firebase.Timestamp;
 
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 
 public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalUserLogin{
-    private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool;
 
-
-    private Timestamp birthday;
+    private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL;
+    private Date birthday,registerDate,lastLoginDate;
     private List<String> followers,following;
     private AnipalUserLevel level; // number of levels
-    private List<AnipalAbstractPost> posts;
+    private List<String> posts;
     private AnipalCoin coin;
     // it goes like that... I dont know the exact profile informations
     private List<String> donations;
     private List<String> likedPosts;
     private boolean isActive ;
+
+
+    public AnipalUser(){
+        donations = new ArrayList<>();
+        likedPosts =new ArrayList<String>();
+        posts = new ArrayList<>();
+        followers = new ArrayList<>();
+        following = new ArrayList<>();
+    }
 
     @Override
     public AnipalUser login(String userUUID){
@@ -30,7 +36,8 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     }
 
     @Override
-    public AnipalUser createUser(String userUUID,String emailAddress,String firstName,String lastName){
+    public AnipalUser createUser(String userUUID,String emailAddress,String firstName
+            ,String lastName,String photoURL,Date birthday){
 
         // control isCreated situation...
         this.coin = new AnipalCoin(1000); // give 1000 anipal coin when account created or don't give any.
@@ -52,6 +59,9 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.userUUID = userUUID;
+        this.photoURL = photoURL;
+        this.birthday = birthday;
+        this.registerDate = Timestamp.now().toDate();
 
         return this;
     }
@@ -73,68 +83,73 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public String getUserUUID() {
         return userUUID;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
     public String getLastName() {
         return lastName;
     }
-
     public String getEmailAddress() {
         return emailAddress;
     }
-
     public String getJob() {
         return job;
     }
-
     public String getHobies() {
         return hobies;
     }
-
     public String getPet() {
         return pet;
     }
-
     public String getCitySchool() {
         return citySchool;
     }
-
-    public Timestamp getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
-
     public List<String> getFollowers() {
         return followers;
     }
-
     public List<String> getFollowing() {
         return following;
     }
-
     public AnipalUserLevel getLevel() {
         return level;
     }
-
-    public List<AnipalAbstractPost> getPosts() {
+    public List<String> getPosts() {
         return posts;
     }
-
     public AnipalCoin getCoin() {
         return coin;
     }
-
     public List<String> getDonations() {
         return donations;
     }
-
     public List<String> getLikedPosts() {
         return likedPosts;
     }
-
     public boolean isActive() {
         return isActive;
+    }
+    public String getPhotoURL() { return photoURL;}
+    public Date getRegisterDate() { return registerDate; }
+    public void addFollower(String followerUUID){ this.followers.add(followerUUID); }
+    public int spendAnipalCoin(int c){
+        return c>coin.getCoin()?-1:coin.spendCoin(c);
+    }
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public void setCitySchool(String citySchool) {
+        this.citySchool = citySchool;
+    }
+
+    public void setPet(String pet) {
+        this.pet = pet;
+    }
+
+    public void setHobies(String hobies) {
+        this.hobies = hobies;
     }
 }

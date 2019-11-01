@@ -48,6 +48,11 @@ public class NavigationActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.main_frame_layout,new AnipalAccountFragment());
                     fragmentTransaction.commit();
                     return true;
+                case R.id.navigation_home:
+                    fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.main_frame_layout,new AnipalHomeFragment());
+                    fragmentTransaction.commit();
+                    return true;
             }
             return false;
         }
@@ -63,9 +68,9 @@ public class NavigationActivity extends AppCompatActivity {
         fragmentManager = this.getSupportFragmentManager();
         fragmentTransaction =fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.add(R.id.main_frame_layout,new AnipalExploreFragment());
+        fragmentTransaction.add(R.id.main_frame_layout,new AnipalHomeFragment());
         fragmentTransaction.commit();
-        navView.getMenu().findItem(R.id.navigation_explore).setChecked(true);
+        navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
 
     }
 

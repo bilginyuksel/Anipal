@@ -8,7 +8,9 @@ public class AnipalUserLevel{
         public AnipalUserLevel(){
                 // first initialization . when user created.
                 // or write a method for user creation only.
-                anipalLevel = AnipalLevel.LEVEL1;
+                // anipalLevel = AnipalLevel.Lvl1;
+                // anipalLevelBar = 0;
+                anipalLevel = AnipalLevel.Lvl1;
                 anipalLevelBar = 0;
         }
 

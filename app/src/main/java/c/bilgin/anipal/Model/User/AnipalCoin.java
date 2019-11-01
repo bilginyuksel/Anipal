@@ -17,8 +17,11 @@ public class AnipalCoin {
     public int getCoin() {
         return coin;
     }
-
     public int getRealMoney() {
         return realMoney;
+    }
+    public int spendCoin(int c){
+        this.coin -= c;
+        return coin;
     }
 }

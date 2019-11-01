@@ -34,7 +34,7 @@
             android:textSize="16dp"
             android:id="@+id/editTextUsername"
             android:layout_marginTop="15dp"
-            android:hint="Kullanıcı Adı:"/>
+            android:hint="E mail:"/>
 
 
         <EditText
@@ -50,7 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Şifremi Unuttum?"
+            android:id="@+id/textViewForgotPassword"
             android:textColor="#43BFDE"
+            android:clickable="true"
             android:layout_gravity="right" />
 
         <Button

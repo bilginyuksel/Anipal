@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp">
+    android:paddingBottom="5dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:layout_width="64dp"
-            android:layout_height="64dp" />
+        <ImageView
+            android:id="@+id/imageButtonProfilePhoto"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/anipallogo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textViewFullname"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="İsim Soyisim"
             android:textColor="#000"
-            android:textSize="18dp"
+            android:textSize="17dp"
             android:textStyle="bold"
-            android:layout_weight="1"
-            android:layout_marginTop="17dp"
-            android:layout_marginLeft="17dp"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButtonProfilePhoto"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/textViewUploadTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="16 Dakika Önce"
             android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:gravity="right"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"/>
+            android:text="16 Dakika Önce"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    </LinearLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Çan'daki sokak hayvanlarının beslenmesi."
         android:textSize="22dp"
         android:textStyle="bold"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:id="@+id/textViewDonationPurpose"
         android:textAlignment="center"
         android:textColor="#000"/>
@@ -52,14 +70,20 @@
         android:textColor="#084a81"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:id="@+id/textViewProgressCounter"
         android:layout_gravity="center"
         android:text="%45"/>
 
-    <androidx.core.widget.ContentLoadingProgressBar
+    <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:progressBackgroundTint="@color/colorPrimary"
-        android:background="@drawable/custom_button"/>
+        android:layout_height="50dp"
+        android:id="@+id/contentLoadingProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressBackgroundTint="@color/cardview_shadow_start_color"
+        android:progressTint="@color/colorPrimaryDark"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:progress="70"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,4 +94,16 @@
         android:id="@+id/textViewDonationPrice"
         android:layout_gravity="center"
         android:text="100 TL"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
+        android:text="Bağış Yap"
+        android:paddingLeft="30dp"
+        android:id="@+id/buttonMakeDonation"
+        android:textAllCaps="false"
+        android:paddingRight="30dp"
+        android:layout_gravity="center"
+        android:textColor="#fff" />
 </LinearLayout>

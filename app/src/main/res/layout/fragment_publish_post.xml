@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eaf2f3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -19,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center">
 
         <ImageView
@@ -52,6 +58,7 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:layout_marginTop="5dp"
         android:weightSum="2">
 
         <!-- Open camera layout -->
@@ -125,6 +132,7 @@
         android:layout_height="wrap_content"
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
         android:paddingTop="10dp"
         android:gravity="center">
 
@@ -154,21 +162,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/rounded_white_layout"
         android:orientation="vertical"
-        android:layout_weight="6"
         android:layout_margin="20dp">
-
         <!-- Why are we donating ! -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
@@ -195,16 +200,16 @@
         <!-- Donation money -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2.5">
+            android:layout_height="wrap_content">
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
+                android:paddingTop="30dp"
+                android:paddingBottom="30dp"
                 android:layout_marginLeft="20dp"
+                android:inputType="number"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/box_layout"
@@ -213,7 +218,7 @@
                 android:id="@+id/editTextDonationPrice"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:hint="0.00 tl"/>
+                android:hint="0.00 TL"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,4 +247,6 @@
             android:textColor="#fff"
             />
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

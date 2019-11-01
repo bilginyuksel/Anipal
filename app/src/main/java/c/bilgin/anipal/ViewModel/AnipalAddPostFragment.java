@@ -1,23 +1,30 @@
 package c.bilgin.anipal.ViewModel;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
+
+import static android.app.Activity.RESULT_OK;
 
 
 public class AnipalAddPostFragment extends Fragment {
@@ -25,6 +32,7 @@ public class AnipalAddPostFragment extends Fragment {
     private Context mContext;
     private EditText editTextDonationPurpose, editTextDonationPrice;
     private Button buttonCreateDonationBar;
+    private ScrollView linearLayout;
     private LinearLayout layoutOpenCamera, layoutPickFromGallery;
     private AnipalFirebase anipalFirebase ;
 
@@ -46,7 +54,7 @@ public class AnipalAddPostFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayout linearLayout=(LinearLayout) inflater.inflate(R.layout.fragment_publish_post,null);
+        linearLayout=(ScrollView) inflater.inflate(R.layout.fragment_publish_post,null);
         editTextDonationPurpose = linearLayout.findViewById(R.id.editTextDonationPurpose);
         buttonCreateDonationBar = linearLayout.findViewById(R.id.buttonCreateDonationBar);
         editTextDonationPrice = linearLayout.findViewById(R.id.editTextDonationPrice);
@@ -56,7 +64,22 @@ public class AnipalAddPostFragment extends Fragment {
         buttonCreateDonationBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createDonationBar();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Bağış Barı");
+                builder.setMessage("Bağış barı oluşturma işleminiz tamamlanıyor. Onaylıyor musunuz?");
+                builder.setPositiveButton("Onayla", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        createDonationBar();
+                    }
+                });
+                builder.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -65,6 +88,7 @@ public class AnipalAddPostFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Go to android gallery intent and pick a photo
+                pickPhotoFromGallery();
             }
         });
 
@@ -72,6 +96,7 @@ public class AnipalAddPostFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Go to camera intent and take a photo
+                takePhotoFromCamera();
             }
         });
 
@@ -79,7 +104,16 @@ public class AnipalAddPostFragment extends Fragment {
         return linearLayout;
     }
 
-
+    private void takePhotoFromCamera(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra("scale",true);
+        startActivityForResult(intent,2);
+    }
+    private void pickPhotoFromGallery(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, 1);
+    }
     private void createDonationBar(){
         // Create donation bar.
         String donationPurpose = editTextDonationPurpose.getText().toString();
@@ -88,6 +122,36 @@ public class AnipalAddPostFragment extends Fragment {
 
         // Now with those information create donation bar.
         post = new AnipalDonationPost(MainActivity.currentUser.getUserUUID(),donationPurpose,donationPrice);
+        post.setUser(MainActivity.currentUser);
         anipalFirebase.publish(post);
+        editTextDonationPrice.getText().clear();
+        editTextDonationPurpose.getText().clear();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // When user comes from gallery or taking photo
+        if(resultCode != RESULT_OK)
+            return;
+
+        // Request code == 1
+        if(requestCode == 1){
+            Uri uri= data.getData();
+            if(uri!=null){
+                Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
+                i.putExtra("imageUri",data.getData().toString());
+                startActivity(i);
+            }
+
+         }
+
+        // Request code == 2
+        else if(requestCode == 2){
+            Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
+            i.putExtras(data.getExtras());
+            startActivity(i);
+
+        }
     }
 }

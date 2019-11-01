@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,9 @@ public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.posts = posts;
         mContext = context;
     }
+    public AnipalPostAdapter(){
+
+    }
 
     // Create new views (invoked by the layout manager.)
     @NonNull
@@ -38,13 +42,16 @@ public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {
         View view = null;
         switch (viewType){
             case ListItem.TYPE_DONATION:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_photo,parent,false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_donation,parent,false);
                 return new ViewHolderDonation(view);
             case ListItem.TYPE_PHOTO:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_donation,parent,false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_photo,parent,false);
                 return new ViewHolderPhoto(view);
         }
-        return null;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_photo,parent,false);
+        ImageView v1 = v.findViewById(R.id.imageViewPhoto);
+        v1.setImageResource(R.drawable.anipallogo);
+        return new ViewHolderPhoto(v);
     }
 
     @Override
