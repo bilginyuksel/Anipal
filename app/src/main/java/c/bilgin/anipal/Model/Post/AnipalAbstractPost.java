@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -79,7 +80,7 @@ public abstract class AnipalAbstractPost implements ListItem{
     public void setUser(AnipalUser u){
         this.anipalUser = u;
     }
-    /*public void setAnipalUser(final AnipalPostAdapter adapter) {
+    public void setAnipalUser(final AnipalPostAdapter adapter) {
         // I didn't like the usage !!!
         // But i think i have to do that right now. :(
         anipalUser = new AnipalUser();
@@ -96,6 +97,6 @@ public abstract class AnipalAbstractPost implements ListItem{
 
             }
         });
-    }*/
+    }
 
 }

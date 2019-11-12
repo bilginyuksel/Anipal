@@ -15,8 +15,13 @@ exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
         // find followers
         const dbRef = admin.database().ref("/Users").child(userID);
         // do the arrow initialization
+       
+        // update users personal post
+        admin.database().ref('/UserPersonalPosts/'+userID).child(originalPost.postUUID).set(originalPost);
+
         const ref = admin.database().ref("/UserPosts");
         ref.child(userID).child(originalPost.postUUID).set(originalPost);
+    
         dbRef.once("value",(data)=>{
             const followers = data.val().followers;
             // Get the followers list.
@@ -34,6 +39,8 @@ exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
 
     });
 
+// when you follow someone you have to update your post status
+// means the users post session has to fill older posts of other user.
 exports.loadOldPostsWhenYouFollow = functions.database.ref('Users/{userID}/following/{followedUID}')
     .onWrite((snapshot,context) => {
         // this function should work when you follow someone

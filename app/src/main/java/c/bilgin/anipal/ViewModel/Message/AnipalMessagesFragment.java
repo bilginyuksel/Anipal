@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Message;
 
 import android.content.Context;
 import android.os.Bundle;

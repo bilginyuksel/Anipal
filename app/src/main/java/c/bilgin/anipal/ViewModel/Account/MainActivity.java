@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.NavigationActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // this progress bar almost never working.
                             progressDialog.dismiss();
-                            Intent i = new Intent(MainActivity.this,NavigationActivity.class);
+                            Intent i = new Intent(MainActivity.this, NavigationActivity.class);
                             startActivity(i);
                         }else{
                             // if not success

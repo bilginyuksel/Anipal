@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Post;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
 
 public class AnipalMakeDonationDialog extends Dialog {
 
@@ -92,7 +93,8 @@ public class AnipalMakeDonationDialog extends Dialog {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        //Toast.makeText(mContext, "Başarıyla tamamlandı!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mContext, "Başarıyla tamamlandı!", Toast.LENGTH_SHORT).show();
+                                        dismiss();
                                     }
                                 }
                             });

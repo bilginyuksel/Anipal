@@ -12,15 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewModel.AnipalFollowProfileActivity"></activity>
-        <activity android:name=".ViewModel.AnipalBuyCoinActivity" />
-        <activity android:name=".ViewModel.AnipalPostUploadActivity" />
+        <activity android:name=".ViewModel.CropActivity"></activity>
+        <activity android:name=".ViewModel.Account.AnipalBuyCoinActivity" />
+        <activity android:name=".ViewModel.Post.AnipalPostUploadActivity" />
         <activity
             android:name=".ViewModel.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ViewModel.RegisterActivity" />
-        <activity android:name=".ViewModel.MainActivity">
+        <activity android:name=".ViewModel.Account.RegisterActivity" />
+        <activity android:name=".ViewModel.Account.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

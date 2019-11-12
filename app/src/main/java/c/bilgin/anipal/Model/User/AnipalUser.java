@@ -11,19 +11,15 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
 
     private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL;
     private Date birthday,registerDate,lastLoginDate;
-    private List<String> followers,following;
-    private AnipalUserLevel level; // number of levels
-    private List<String> posts;
+    private List<String> followers, following, posts, donations, likedPosts;
     private AnipalCoin coin;
     // it goes like that... I dont know the exact profile informations
-    private List<String> donations;
-    private List<String> likedPosts;
     private boolean isActive ;
 
 
     public AnipalUser(){
         donations = new ArrayList<>();
-        likedPosts =new ArrayList<String>();
+        likedPosts =new ArrayList<>();
         posts = new ArrayList<>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
@@ -42,7 +38,6 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         // control isCreated situation...
         this.coin = new AnipalCoin(1000); // give 1000 anipal coin when account created or don't give any.
         // if there is a transformation on money like anipal to -> real money, don't give any anipal coin to user.
-        this.level = new AnipalUserLevel(); // initialize at user creation
 
         // you can control it for email verification or if you start money process
         this.isActive = true;
@@ -112,9 +107,6 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     }
     public List<String> getFollowing() {
         return following;
-    }
-    public AnipalUserLevel getLevel() {
-        return level;
     }
     public List<String> getPosts() {
         return posts;

@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Post;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -23,6 +23,7 @@ import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
 
 import static android.app.Activity.RESULT_OK;
 

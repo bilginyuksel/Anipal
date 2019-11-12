@@ -1,12 +1,13 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Account;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -14,24 +15,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
-import c.bilgin.anipal.CircleTransform;
 import c.bilgin.anipal.R;
 
 
 public class AnipalAccountFragment extends Fragment {
 
-    private TextView textViewFullname, textViewLevel
+    private TextView textViewFullname
             ,textViewStartedDonationCount, textViewFedAnimals, textViewFollowerCount
             ,textViewYear, textViewDayOfMonth, textViewMonthOfYear, textViewCurrentAnipalCoin
             ,textViewCitySchool, textViewJob, textViewPet, textViewHobies;
-    private ImageView imageViewProfilePhoto;
+    private CircularImageView imageViewProfilePhoto;
     private ImageButton imageButtonProfileEdit;
+    private Button buttonGetCoin;
     private ScrollView linearLayout;
 
     @Override
@@ -47,7 +47,6 @@ public class AnipalAccountFragment extends Fragment {
 
     private void initialize(){
         textViewFullname = linearLayout.findViewById(R.id.textViewFullname);
-        textViewLevel = linearLayout.findViewById(R.id.textViewLevel);
         imageViewProfilePhoto = linearLayout.findViewById(R.id.imageViewProfilePhoto);
         textViewStartedDonationCount = linearLayout.findViewById(R.id.textViewStartedDonationCount);
         textViewFedAnimals = linearLayout.findViewById(R.id.textViewFedAnimals);
@@ -61,13 +60,15 @@ public class AnipalAccountFragment extends Fragment {
         textViewJob = linearLayout.findViewById(R.id.textViewJob);
         textViewHobies = linearLayout.findViewById(R.id.textViewHobies);
         textViewPet = linearLayout.findViewById(R.id.textViewPet);
+        buttonGetCoin = linearLayout.findViewById(R.id.buttonGetCoin);
 
 
         // ----------------------------------------------------
         textViewFullname.setText(MainActivity.currentUser.getFirstName() + " "+MainActivity.currentUser.getLastName());
-        textViewLevel.setText(MainActivity.currentUser.getLevel().getAnipalLevel().toString()+" Hayvansever");
         textViewCurrentAnipalCoin.setText(""+MainActivity.currentUser.getCoin().getCoin());
-        Picasso.get().load(MainActivity.currentUser.getPhotoURL()).fit().transform(new CircleTransform()).into(imageViewProfilePhoto);
+        if(MainActivity.currentUser.getPhotoURL() != null)
+            Picasso.get().load(MainActivity.currentUser.getPhotoURL()).fit().into(imageViewProfilePhoto);
+
         textViewFollowerCount.setText(""+MainActivity.currentUser.getFollowers().size());
         // Update these values this values are complex.
         textViewStartedDonationCount.setText(""+MainActivity.currentUser.getPosts().size());
@@ -103,6 +104,15 @@ public class AnipalAccountFragment extends Fragment {
                 MainActivity.currentUser.addFollower("tMDDuURrPKSWPIhoL0Dq7jHj3R02");
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currentUser.getUserUUID());
                 ref.setValue(MainActivity.currentUser);*/
+            }
+        });
+
+
+        buttonGetCoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity(),AnipalBuyCoinActivity.class);
+                startActivity(i);
             }
         });
 

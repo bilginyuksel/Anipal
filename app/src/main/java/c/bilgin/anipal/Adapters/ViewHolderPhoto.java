@@ -1,4 +1,4 @@
-package c.bilgin.anipal.Model.Post;
+package c.bilgin.anipal.Adapters;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,17 +7,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
-import c.bilgin.anipal.CircleTransform;
+import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
+import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.Account.AnipalAccountFragment;
+import c.bilgin.anipal.ViewModel.Account.AnipalFollowProfileFragment;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.ViewModel.NavigationActivity;
 
 public class ViewHolderPhoto extends ViewHolder {
 
     private ImageView img;
-    private ImageView imageButtonProfilePhoto;
+    private CircularImageView imageButtonProfilePhoto;
     private TextView textViewUploadTime, textViewFullname,
     textViewLikes,textViewDescription;
 
@@ -32,7 +38,7 @@ public class ViewHolderPhoto extends ViewHolder {
     }
 
     @Override
-    public void bindType(AnipalAbstractPost post) {
+    public void bindType(final AnipalAbstractPost post) {
         AnipalPhotoPost photoPost = (AnipalPhotoPost)post;
         // Load photo and user informations here...
         // img.setImageResource(R.drawable.anipallogo);
@@ -57,6 +63,22 @@ public class ViewHolderPhoto extends ViewHolder {
         textViewDescription.setText(photoPost.getPhotoDescription());
         textViewLikes.setText(""+photoPost.getLikers().size()+" beğeni");
         // Set image with picasso.
-        Picasso.get().load(photoPost.getAnipalUser().getPhotoURL()).fit().transform(new CircleTransform()).into(imageButtonProfilePhoto);
+        if(photoPost.getAnipalUser().getPhotoURL()!=null)
+            Picasso.get().load(photoPost.getAnipalUser().getPhotoURL()).fit().into(imageButtonProfilePhoto);
+
+        imageButtonProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // check if the user is the user which uses the application right now
+                // you have to manage that user to real profile page.
+                NavigationActivity.fragmentTransaction = NavigationActivity.fragmentManager.beginTransaction();
+                NavigationActivity.fragmentTransaction.replace(R.id.main_frame_layout,
+                        post.getAnipalUser()
+                                .getUserUUID().equals(MainActivity.currentUser.getUserUUID())?
+                                new AnipalAccountFragment():
+                                new AnipalFollowProfileFragment(post.getAnipalUser()));
+                NavigationActivity.fragmentTransaction.commit();
+            }
+        });
     }
 }

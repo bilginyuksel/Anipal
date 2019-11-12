@@ -12,12 +12,17 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.Account.AnipalAccountFragment;
+import c.bilgin.anipal.ViewModel.Account.AnipalExploreFragment;
+import c.bilgin.anipal.ViewModel.Message.AnipalMessagesFragment;
+import c.bilgin.anipal.ViewModel.Post.AnipalAddPostFragment;
+import c.bilgin.anipal.ViewModel.Post.AnipalHomeFragment;
 
 public class NavigationActivity extends AppCompatActivity {
 
     // private FrameLayout frameLayout;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
+    public static FragmentManager fragmentManager;
+    public static FragmentTransaction fragmentTransaction;
 
     // Create all objects here.
     // You can use singleton design pattern for all of them

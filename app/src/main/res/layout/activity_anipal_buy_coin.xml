@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewModel.AnipalBuyCoinActivity">
+    android:orientation="vertical"
+    android:background="#eaf2f3"
+    tools:context=".ViewModel.Account.AnipalBuyCoinActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -39,38 +41,251 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BAKİYE:"
-            app:layout_constraintTop_toBottomOf="@id/constraint1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:id="@+id/txtBalance"
-            android:textSize="28dp"
-            android:textColor="#000"
-            android:layout_gravity="center" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="200"
-            app:layout_constraintLeft_toRightOf="@id/txtBalance"
-            app:layout_constraintTop_toBottomOf="@id/constraint1"
-            android:id="@+id/textViewCoinQuantity"
-            android:textStyle="bold"
-            android:layout_marginLeft="15dp"
-            android:textColor="#084a81"
-            android:textSize="28dp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/blue_pati"
-            app:layout_constraintLeft_toRightOf="@id/textViewCoinQuantity"
-            app:layout_constraintTop_toBottomOf="@id/constraint1"
-            android:layout_marginLeft="5dp"/>
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/linearLayout1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!-- Balance LAyout -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textSize="28dp"
+                    android:text="Bakiye:"/>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#084a81"
+                    android:backgroundTint="#fff"
+                    android:textSize="28dp"
+                    android:text="200"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/blue_pati"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="28 Ekim 16:15 itibari ile"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/linearLayout2"
+            android:orientation="vertical"
+            android:layout_weight="0.8">
+
+            <!-- Auto buy -->
+            <Switch
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:layout_marginLeft="20dp"
+                android:text="Otomatik Bakiye Yükleme Talimatı"
+                android:layout_marginRight="15dp"/>
+
+            <!-- Horizontal Line -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yüklemek istediğiniz pati miktarı"
+                android:textColor="#000"
+                android:layout_marginLeft="20dp"
+                android:textSize="18dp"/>
+
+            <!-- Pati -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/rounded_white_layout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textColor="#084a81"
+                        android:textSize="20dp"/>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/blue_pati"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/rounded_white_layout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textColor="#084a81"
+                        android:textSize="20dp"/>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/blue_pati"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/rounded_white_layout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textColor="#084a81"
+                        android:textSize="20dp"/>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/blue_pati"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@drawable/rounded_white_layout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textColor="#084a81"
+                        android:textSize="20dp"/>
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/blue_pati"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Buy with google play -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity = "center"
+                android:layout_gravity="center"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:paddingTop="10dp"
+                android:layout_marginTop="15dp"
+                android:paddingBottom="10dp"
+                android:background="@drawable/rounded_white_layout">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google Play ile "
+                    android:textSize="18dp"
+                    android:textColor="#084a81"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Satın Al"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="#084a81"/>
+            </LinearLayout>
+
+            <!-- pati equals to Tl-->
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:gravity="center"
+               android:orientation="horizontal">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="10"
+                   android:textStyle="bold"
+                   android:textSize="20dp"
+                   android:textColor="#084a81"/>
+               <ImageView
+                   android:layout_width="15dp"
+                   android:layout_height="15dp"
+                   android:layout_marginLeft="5dp"
+                   android:background="@drawable/blue_pati"/>
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="5dp"
+                   android:text="= 1 TL"
+                   android:textStyle="bold"
+                   android:textColor="#084a81"
+                   android:textSize="20dp"/>
+           </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

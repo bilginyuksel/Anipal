@@ -23,7 +23,7 @@ import c.bilgin.anipal.Adapters.AnipalPostAdapter;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
-import c.bilgin.anipal.ViewModel.MainActivity;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
 
 
 public class AnipalFirebase implements AnipalFirebasePosts{
@@ -67,12 +67,12 @@ public class AnipalFirebase implements AnipalFirebasePosts{
                     if(snapshot.hasChild("photoURL")){
                         post = snapshot.getValue(AnipalPhotoPost.class);
                         // find user and add it to posts.add() you can use task for that.
-                        //post.setAnipalUser(adapter);
+                        post.setAnipalUser(adapter);
                         posts.add(post);
                     }else{
                         post = snapshot.getValue(AnipalDonationPost.class);
                         // find user and add it to posts.add() you can use task for that.
-                        //post.setAnipalUser(adapter);
+                        post.setAnipalUser(adapter);
                         posts.add(post);
                     }
                     adapter.notifyDataSetChanged();

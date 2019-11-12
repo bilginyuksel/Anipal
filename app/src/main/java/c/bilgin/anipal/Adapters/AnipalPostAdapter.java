@@ -14,9 +14,6 @@ import java.util.List;
 
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.ListItem;
-import c.bilgin.anipal.Model.Post.ViewHolder;
-import c.bilgin.anipal.Model.Post.ViewHolderDonation;
-import c.bilgin.anipal.Model.Post.ViewHolderPhoto;
 import c.bilgin.anipal.R;
 
 public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {

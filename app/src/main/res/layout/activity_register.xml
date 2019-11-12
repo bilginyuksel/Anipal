@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAF2F3"
-    tools:context=".ViewModel.RegisterActivity">
+    tools:context=".ViewModel.Account.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

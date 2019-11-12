@@ -1,10 +1,12 @@
-package c.bilgin.anipal.Model.Post;
+package c.bilgin.anipal.Adapters;
 
 
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 
 public abstract class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(@NonNull View itemView) {

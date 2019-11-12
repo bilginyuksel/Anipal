@@ -1,21 +1,19 @@
 package c.bilgin.anipal.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import c.bilgin.anipal.CircleTransform;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
 
@@ -24,10 +22,11 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
 
     private Context mContext;
     private List<AnipalUser> anipalUsers;
+    private OnItemClickListener onItemClickListener;
 
     public static class ViewHolderUser extends RecyclerView.ViewHolder{
 
-        private ImageView imageViewProfilePhoto;
+        private CircularImageView imageViewProfilePhoto;
         private TextView textViewFullName, textViewEmail;
 
         public ViewHolderUser(@NonNull View itemView) {
@@ -39,7 +38,9 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
 
         public void bindType(final AnipalUser user){
             textViewFullName.setText(user.getFirstName() + " "+ user.getLastName());
-            Picasso.get().load(user.getPhotoURL()).fit().transform(new CircleTransform()).into(imageViewProfilePhoto);
+            if(user.getPhotoURL()!=null)
+                Picasso.get().load(user.getPhotoURL()).fit().into(imageViewProfilePhoto);
+
             textViewEmail.setText(user.getEmailAddress());
 
 
@@ -47,9 +48,10 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
     }
 
 
-    public AnipalUserAdapter(Context context,List<AnipalUser> anipalUsers){
+    public AnipalUserAdapter(Context context,List<AnipalUser> anipalUsers, OnItemClickListener onItemClickListener){
         this.mContext = context;
         this.anipalUsers = anipalUsers;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -59,7 +61,14 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_anipal_user,parent,false);
 
-        ViewHolderUser viewHolderUser = new ViewHolderUser(v);
+
+        final ViewHolderUser viewHolderUser = new ViewHolderUser(v);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickListener.onItemClick(view, viewHolderUser.getAdapterPosition());
+            }
+        });
         return viewHolderUser;
     }
 

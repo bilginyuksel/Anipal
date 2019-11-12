@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.ViewModel.Post;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -32,6 +31,7 @@ import c.bilgin.anipal.Model.Firebase.AnipalFirebasePosts;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
 
 public class AnipalPostUploadActivity extends AppCompatActivity {
 
