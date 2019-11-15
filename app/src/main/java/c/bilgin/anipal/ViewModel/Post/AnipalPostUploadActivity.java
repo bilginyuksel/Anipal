@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.ViewModel.NavigationActivity;
 
 public class AnipalPostUploadActivity extends AppCompatActivity {
 
@@ -43,6 +45,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
     private StorageReference reference;
     private EditText editTextDescription;
     private ProgressDialog dialog;
+    int code = -1;
 
     private Uri uri;
     private Bitmap map;
@@ -57,75 +60,43 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         imageButtonBack = findViewById(R.id.imageButtonBack);
         editTextDescription = findViewById(R.id.editTextDescription);
         dialog = new ProgressDialog(this);
-        firebasePosts = new AnipalFirebase(this,"Posts");
+        firebasePosts = new AnipalFirebase(this, "Posts");
         reference = FirebaseStorage.getInstance().getReference("Posts");
         dialog.setTitle("Gönderi");
         dialog.setMessage("Gönderi paylaşılıyor. Lütfen Bekleyiniz...");
 
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        // Get data from another intent
-        // Capture intent data with 2 different contents
-        // If user used camera get as a bitmap if user chose from gallery get as uri
-
-        if(getIntent().getStringExtra("imageUri")!=null) {
-            uri = Uri.parse(getIntent().getStringExtra("imageUri"));
-            imageView.setImageURI(uri);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-
-            File f = new File(uri.getPath());
-
-            BitmapFactory.decodeFile(f.getAbsolutePath(),options);
-            int height = options.outHeight;
-            int width = options.outWidth;
-            imageView.setScaleType(ImageView.ScaleType.FIT_START);
-            //imageView.setScaleType(ImageView.ScaleType.FIT_END);
-
-            /*int theHeight = (height*metrics.widthPixels) / (width>0?width:1);
-            imageView.setMinimumHeight(theHeight);*/
-
-            isUri = true;
+        if (getIntent().getByteArrayExtra("bytes") != null) {
+            byte[] bytes = getIntent().getByteArrayExtra("bytes");
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            map = bitmap;
+            imageView.setImageBitmap(bitmap);
         }else{
-            Bundle extras = getIntent().getExtras();
-            map = (Bitmap)extras.get("data");
-            System.out.println("MAP HEIGHT : "+map.getHeight());
-            System.out.println("MAP WIDTH : "+map.getWidth());
-            int height = map.getHeight();
-            int width = map.getWidth();
-            imageView.setImageBitmap(map);
-            imageView.setMinimumWidth(width);
-            imageView.setScaleType((ImageView.ScaleType.FIT_XY));
-
-
-            int widthPixels = metrics.widthPixels;
-            int heightPixels = metrics.heightPixels;
-
-            int theHeight = (height*widthPixels)/width;
-            imageView.setMinimumHeight(theHeight);
-
-            isUri = false; // i did this because i scare any kind of errors.
+            imageView.setImageURI(getIntent().getData());
+            code = 0;
         }
 
-        buttonUploadApprove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.show();
-                if(isUri) uploadPhotoPostFirebaseURI(uri);
-                else uploadPhotoPostFirebaseBitmap(map);
-            }
-        });
+            buttonUploadApprove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.show();
+                    if(code == 0) uploadPhotoPostFirebaseURI(getIntent().getData());
+                    else uploadPhotoPostFirebaseBitmap(map);
+                }
+            });
 
-        // go back
-        imageButtonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // go back
-                onBackPressed();
-            }
-        });
+            imageButtonBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    /* Issue #1 : It goes back to crop activity we don't want this.
+                    * It has to go to addPostFragment so we need to use fragment managers here
+                    * */
+                    // by the way you can set the fragments too.
+                    startActivity(new Intent(AnipalPostUploadActivity.this, NavigationActivity.class));
+                    // onBackPressed();
+                }
+            });
+
     }
 
     private void uploadPhotoPostFirebaseURI(Uri uri){

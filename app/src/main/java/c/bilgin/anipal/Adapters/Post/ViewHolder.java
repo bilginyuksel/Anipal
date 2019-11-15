@@ -1,4 +1,4 @@
-package c.bilgin.anipal.Adapters;
+package c.bilgin.anipal.Adapters.Post;
 
 
 import android.view.View;

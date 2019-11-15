@@ -126,4 +126,10 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("Users");
     }
+
+
+    @Override
+    public void onBackPressed() {
+        // do nothing. it won't work
+    }
 }

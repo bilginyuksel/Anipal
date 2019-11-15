@@ -24,6 +24,7 @@ import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.ViewModel.CropActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -106,14 +107,20 @@ public class AnipalAddPostFragment extends Fragment {
     }
 
     private void takePhotoFromCamera(){
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intent.putExtra("scale",true);
-        startActivityForResult(intent,2);
+        /*
+        * direct to CropActivity with request code 2001
+        * capture image via camera then crop */
+        Intent i = new Intent(getContext(),CropActivity.class);
+        i.putExtra("code",2001);
+        startActivity(i);
     }
     private void pickPhotoFromGallery(){
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, 1);
+        /*
+        * direct to CropActivity with request code 2000
+        * pick image from gallery then crop*/
+        Intent i = new Intent(Intent.ACTION_PICK);
+        i.setType("image/*");
+        startActivityForResult(i,1);
     }
     private void createDonationBar(){
         // Create donation bar.
@@ -140,19 +147,12 @@ public class AnipalAddPostFragment extends Fragment {
         if(requestCode == 1){
             Uri uri= data.getData();
             if(uri!=null){
-                Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
-                i.putExtra("imageUri",data.getData().toString());
+                Intent i = new Intent(getActivity(), AnipalPostUploadActivity.class);
+                i.setData(uri);
                 startActivity(i);
             }
 
          }
 
-        // Request code == 2
-        else if(requestCode == 2){
-            Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
-            i.putExtras(data.getExtras());
-            startActivity(i);
-
-        }
     }
 }

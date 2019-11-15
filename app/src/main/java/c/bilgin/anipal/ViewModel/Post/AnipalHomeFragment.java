@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import c.bilgin.anipal.Adapters.AnipalPostAdapter;
+import c.bilgin.anipal.Adapters.Post.AnipalPostAdapter;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.R;

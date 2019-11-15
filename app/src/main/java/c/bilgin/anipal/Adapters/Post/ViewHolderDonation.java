@@ -1,4 +1,4 @@
-package c.bilgin.anipal.Adapters;
+package c.bilgin.anipal.Adapters.Post;
 
 import android.content.Context;
 import android.view.View;
@@ -80,9 +80,10 @@ public class ViewHolderDonation extends ViewHolder {
 
 
         // Add user properties when user loaded
-        textViewFullname.setText(donationPost.getAnipalUser().getFirstName() + " "+donationPost.getAnipalUser().getLastName());
+        textViewFullname.setText(donationPost.getAnipalUser()!=null?
+                (donationPost.getAnipalUser().getFirstName() + " "+donationPost.getAnipalUser().getLastName()):"");
         // Set image with picasso.
-        if(donationPost.getAnipalUser().getPhotoURL() != null)
+        if(donationPost.getAnipalUser()!=null && donationPost.getAnipalUser().getPhotoURL() != null)
             Picasso.get().load(donationPost.getAnipalUser().getPhotoURL()).fit().into(imgButtonProfilePhoto);
 
 

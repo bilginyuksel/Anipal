@@ -59,7 +59,10 @@
     <!-- Find the length of the photo -->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:minHeight="300dp"
+        android:maxHeight="500dp"
         android:id="@+id/imageViewPhoto" />
     <LinearLayout
         android:layout_width="match_parent"

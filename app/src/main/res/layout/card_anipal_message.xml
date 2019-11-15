@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_gravity="right"
+    android:id="@+id/linearLayout"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutSender"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#084a81"
+            android:layout_weight="1"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bayram Ali Arslan"
+            android:textSize="18dp"
+            android:id="@+id/txtSender"
+            android:layout_marginRight="20dp"
+            android:textColor="#084a81"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/blue_message_ballon"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="right"
+        android:layout_marginLeft="40dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome ! Ok last test try now i am goin to write a big text"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            android:layout_gravity="right"
+            android:paddingLeft="20dp"
+            android:id="@+id/txtMessage"
+            android:paddingTop="10dp"
+            android:paddingBottom="15dp"
+            android:layout_marginRight="10dp"
+            android:paddingRight="17dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

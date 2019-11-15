@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#eaf2f3"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -8,25 +10,44 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:text="Mesajlar"
-            android:textSize="20dp"
-            android:paddingBottom="10dp"
-            android:textAlignment="center"
-            android:background="#084a81"/>
+            android:background="#084a81"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:text="Mesajlar"
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"
+                android:paddingBottom="10dp"
+                android:layout_weight="0.8"
+                android:textAlignment="center"/>
+            <ImageButton
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="1dp"
+                android:id="@+id/openUsers"
+                android:background="@drawable/icon_white_arrow" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#000"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
             android:text="En çok konuşulan kişiler"
             android:textSize="20dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
+            android:padding="10dp"
+            android:id="@+id/frequentRooms"
             android:layout_height="wrap_content">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -36,26 +57,17 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:text="Sohbetler"
+            android:layout_marginLeft="10dp"
             android:textColor="#000"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Bulunduğunuz Gruplar"
-            android:textColor="#000"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:padding="10dp"
+            android:id="@+id/chatRooms">
 
         </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 
 

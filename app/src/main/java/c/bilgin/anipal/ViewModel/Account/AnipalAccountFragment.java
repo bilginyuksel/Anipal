@@ -1,13 +1,19 @@
 package c.bilgin.anipal.ViewModel.Account;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -15,12 +21,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.api.Distribution;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.ViewModel.CropActivity;
 
 
 public class AnipalAccountFragment extends Fragment {
@@ -107,6 +115,13 @@ public class AnipalAccountFragment extends Fragment {
             }
         });
 
+        imageViewProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                choosePhotoOption();
+            }
+        });
+
 
         buttonGetCoin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,5 +132,50 @@ public class AnipalAccountFragment extends Fragment {
         });
 
         return linearLayout;
+    }
+
+    private void choosePhotoOption(){
+        Dialog d = new Dialog(getContext());
+        d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        LinearLayout l = new LinearLayout(d.getContext());
+        l.setBackgroundResource(R.drawable.rounded_white_layout);
+        l.setPadding(20,20,20,20);
+        l.setOrientation(LinearLayout.VERTICAL);
+        // Btn get photo from camerea
+        Button btn = new Button(l.getContext());
+        btn.setText("Kamera ile fotograf çek");
+        btn.setAllCaps(false);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Camera intent
+                // Issue
+                Intent i = new Intent(getContext(),CropActivity.class);
+                // code 1 means that you are coming this intent
+                // to change profile picture via capturing image by camera
+                i.putExtra("code",1001);
+                startActivity(i);
+            }
+        });
+
+        // Btn get photo from gallery
+        Button btn2 = new Button(l.getContext());
+        btn2.setText("Galeriden fotograf seç");
+        btn2.setAllCaps(false);
+        l.addView(btn);
+        l.addView(btn2);
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Gallery intent
+                Intent i = new Intent(getContext(),CropActivity.class);
+                i.putExtra("code",1000); // code 0 means that you are coming to
+                // change the profile picture with image from gallery
+                startActivity(i);
+            }
+        });
+
+        d.setContentView(l);
+        d.show();
     }
 }

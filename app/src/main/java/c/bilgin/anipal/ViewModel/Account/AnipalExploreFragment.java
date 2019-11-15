@@ -1,7 +1,6 @@
 package c.bilgin.anipal.ViewModel.Account;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import c.bilgin.anipal.Adapters.AnipalUserAdapter;
+import c.bilgin.anipal.Adapters.User.AnipalUserAdapter;
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;

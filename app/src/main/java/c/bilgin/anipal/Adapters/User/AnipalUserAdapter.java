@@ -1,4 +1,4 @@
-package c.bilgin.anipal.Adapters;
+package c.bilgin.anipal.Adapters.User;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
 

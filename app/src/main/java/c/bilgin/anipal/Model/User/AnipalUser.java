@@ -133,6 +133,10 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         this.job = job;
     }
 
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
     public void setCitySchool(String citySchool) {
         this.citySchool = citySchool;
     }

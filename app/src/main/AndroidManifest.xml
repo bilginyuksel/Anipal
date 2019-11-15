@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewModel.CropActivity"></activity>
+        <activity android:name=".ViewModel.Message.AnipalMessageActivity"></activity>
+        <activity android:name=".ViewModel.Message.AnipalFindUsersToMessage" />
+        <activity android:name=".ViewModel.CropActivity" />
         <activity android:name=".ViewModel.Account.AnipalBuyCoinActivity" />
         <activity android:name=".ViewModel.Post.AnipalPostUploadActivity" />
         <activity

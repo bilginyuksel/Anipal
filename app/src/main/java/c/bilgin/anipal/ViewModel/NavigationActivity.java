@@ -1,9 +1,13 @@
 package c.bilgin.anipal.ViewModel;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.ViewModel.Account.AnipalAccountFragment;
 import c.bilgin.anipal.ViewModel.Account.AnipalExploreFragment;
+import c.bilgin.anipal.ViewModel.Account.MainActivity;
 import c.bilgin.anipal.ViewModel.Message.AnipalMessagesFragment;
 import c.bilgin.anipal.ViewModel.Post.AnipalAddPostFragment;
 import c.bilgin.anipal.ViewModel.Post.AnipalHomeFragment;
@@ -79,4 +84,28 @@ public class NavigationActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        // smile
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Çıkış");
+        builder.setMessage("Uygulamadan çıkış yapmak istiyor musunuz ?");
+        builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // forget shared preferences // delete temp db
+                Intent i1 = new Intent(NavigationActivity.this, MainActivity.class);
+                startActivity(i1);
+            }
+        });
+        builder.setNegativeButton("Hayır", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // do nothing
+            }
+        });
+
+        builder.show();
+    }
 }

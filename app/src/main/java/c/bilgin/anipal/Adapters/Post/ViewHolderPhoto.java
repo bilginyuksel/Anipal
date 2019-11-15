@@ -1,4 +1,4 @@
-package c.bilgin.anipal.Adapters;
+package c.bilgin.anipal.Adapters.Post;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -59,11 +59,11 @@ public class ViewHolderPhoto extends ViewHolder {
 
 
         // Add user properties when user loaded
-        textViewFullname.setText(photoPost.getAnipalUser().getFirstName() + " "+photoPost.getAnipalUser().getLastName());
+        textViewFullname.setText(photoPost.getAnipalUser()!=null?(photoPost.getAnipalUser().getFirstName() + " "+photoPost.getAnipalUser().getLastName()):"");
         textViewDescription.setText(photoPost.getPhotoDescription());
         textViewLikes.setText(""+photoPost.getLikers().size()+" beğeni");
         // Set image with picasso.
-        if(photoPost.getAnipalUser().getPhotoURL()!=null)
+        if(photoPost.getAnipalUser()!=null && photoPost.getAnipalUser().getPhotoURL()!=null)
             Picasso.get().load(photoPost.getAnipalUser().getPhotoURL()).fit().into(imageButtonProfilePhoto);
 
         imageButtonProfilePhoto.setOnClickListener(new View.OnClickListener() {

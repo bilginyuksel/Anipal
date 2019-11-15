@@ -70,10 +70,11 @@
                     android:textColor="#000"
                     android:textSize="28dp"
                     android:text="Bakiye:"/>
-                <EditText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#084a81"
+                    android:id="@+id/txtBalance"
                     android:backgroundTint="#fff"
                     android:textSize="28dp"
                     android:text="200"/>
@@ -172,7 +173,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
+                        android:text="20"
                         android:textColor="#084a81"
                         android:textSize="20dp"/>
                     <ImageView
@@ -194,7 +195,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
+                        android:text="30"
                         android:textColor="#084a81"
                         android:textSize="20dp"/>
                     <ImageView
@@ -216,7 +217,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10"
+                        android:text="40"
                         android:textColor="#084a81"
                         android:textSize="20dp"/>
                     <ImageView

@@ -19,10 +19,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import c.bilgin.anipal.Adapters.AnipalPostAdapter;
+import c.bilgin.anipal.Adapters.Post.AnipalPostAdapter;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
+import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.ViewModel.Account.MainActivity;
 
 
@@ -67,12 +68,14 @@ public class AnipalFirebase implements AnipalFirebasePosts{
                     if(snapshot.hasChild("photoURL")){
                         post = snapshot.getValue(AnipalPhotoPost.class);
                         // find user and add it to posts.add() you can use task for that.
-                        post.setAnipalUser(adapter);
+                        post.setAnipalUser(adapter,post.getUserUUID());
+                        //findUser(post,post.getUserUUID());
                         posts.add(post);
                     }else{
                         post = snapshot.getValue(AnipalDonationPost.class);
                         // find user and add it to posts.add() you can use task for that.
-                        post.setAnipalUser(adapter);
+                        post.setAnipalUser(adapter,post.getUserUUID());
+                        //findUser(post,post.getUserUUID());
                         posts.add(post);
                     }
                     adapter.notifyDataSetChanged();
@@ -93,5 +96,20 @@ public class AnipalFirebase implements AnipalFirebasePosts{
 
     public Context getmContext() {
         return mContext;
+    }
+
+    private void findUser(final AnipalAbstractPost post, String uid){
+        DatabaseReference r = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        r.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                post.setUser(dataSnapshot.getValue(AnipalUser.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
