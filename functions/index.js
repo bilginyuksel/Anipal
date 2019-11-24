@@ -3,6 +3,48 @@ const admin = require('firebase-admin');
 
 admin.initializeApp();
 
+
+
+function loadOldPosts(currentUserUid, followedUserUid){
+    
+    /**
+     * find references:
+     * upload followedusers old posts to followinguser post pool.
+     */
+    const refOldPosts = admin.database().ref("/UserPersonalPosts").child(followedUserUid);
+    const refCurrentUserPosts = admin.database().ref("/UserPosts").child(currentUserUid);
+
+    refOldPosts.once("value", (data) => {
+        // console.log("Data : ",data);
+        if(data.exists()){
+            data.forEach(element => {
+                const value = element.val();
+                console.log("Element : ",value);
+                refCurrentUserPosts.child(value.postUUID).set(value);
+            });
+
+        }
+    });
+
+}
+
+
+function sendNotification(userUid, message){
+    // notification send code.
+
+    const payload = {
+        notification:{
+            title:'Bir mesajınız var',
+            body:message
+        }
+    };
+
+    admin.database().ref("/Users").child(userUid).child("messageToken").once("value",data=>{
+        const messageToken = data.val();
+        admin.messaging().sendToDevice(messageToken,payload);
+    });
+}
+
 // This functions triggers onCreate, onUpdate and onDelete
 // Specify the function for on delete but no need at this time.
 exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
@@ -39,43 +81,20 @@ exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
 
     });
 
-// when you follow someone you have to update your post status
-// means the users post session has to fill older posts of other user.
-// exports.loadOldPostsWhenYouFollow = functions.database.ref('Users/{userID}/following/{followedUID}')
-//     .onWrite((snapshot,context) => {
-//         // this function should work when you follow someone
-//         // You will get the usersID
-//         // And find his all posts. Load to your userpost field
-//         const authUserUid = context.auth.uid;
-//         const followedUserUid = context.params.followedUID; // maybe that is not a true usage
-//         const oldPostsRef = admin.database().ref("/UserPersonalPosts").child(followedUserUid);
-//         console.log(snapshot.after.val());
 
-//         oldPostsRef.once("value",(data)=>{
-//             const oldPosts = data.val();
-
-//             console.log(oldPosts);
-//             if(oldPosts){
-//                 // If there is any post exists
-//                 const ref = admin.database().ref("/UserPosts");
-//                 oldPosts.forEach(element=>{
-//                     ref.child(authUserUid).child(element.postUUID).set(element);
-//                 });
-//             }
-//         });
-
-//     });
-
-
+/*
+this functions action was onWrite() if there is any problem with uploading messages to chatroom
+check it 
+*/ 
 exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
-    .onWrite((snap,context) => {
+    .onCreate((snap,context) => {
         // When a new message created !
 
         /* 
         also update chatrooms */
-        const messageData = snap.after.val();
+        const messageData = snap.val();
         // find sender and receiver
-        const receiver = messageData.receiverUUID
+        const receiver = messageData.receiverUUID;
         const sender = context.auth.uid;
 
         const refChatRoom = admin.database().ref("/ChatRooms");
@@ -85,8 +104,95 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
         // receiver's chatroom
         refChatRoom.child(receiver).child(sender).child("messages").child(messageData.messageUUID).set(messageData);
         refChatRoom.child(receiver).child(sender).update({"lastMessage":messageData.message,"lastMessageDate":messageData.sendDate});
+        // increment not read
+        refChatRoom.child(receiver).child(sender).child("isReadCounter").transaction(isReadCounter =>{
+            if(isReadCounter || (isReadCounter===0)){
+                isReadCounter++;
+            }
+            return isReadCounter;
+        });
+        refChatRoom
         /*
         send notification to receiver
         notification stuff here */
+        sendNotification(receiver,messageData.message);
 
+    });
+
+
+
+// Control this function
+exports.followUserListener = functions.database.ref("Users/{userUUID}/following/{followingUUID}")
+    .onWrite((snap,context) =>{
+
+        // get current user :: means(follower)
+        const currentUserUid = context.auth.uid;
+        // Get followed user uid
+        const followedUid = snap.after.val();
+        // find followed user and update that user's followers list.
+        const refUser = admin.database().ref("/Users").child(followedUid);
+
+        console.log({'Current User Uid : ':currentUserUid,"Followed User Uid : ":followedUid});
+        var followers = []
+        refUser.once("value",(data)=>{
+            if(data.exists()){
+                console.log("Data.val() : ",data.val());
+                followers = data.val().followers;
+                console.log("Data.val() Followers : ",data.val().followers);
+                if(followers===undefined)
+                    followers = [];
+        
+                console.log("Followers : ",followers);
+                followers.push(currentUserUid);
+                refUser.update({"followers":followers});
+            } 
+        });
+     
+        // followers.push(currentUserUid);
+        // refUser.update({"followers":followers});
+
+        // When user follows a new user 
+        // it should take followed users old posts to their post pool.
+        // First we have to get the followed user posts.
+        loadOldPosts(currentUserUid,followedUid);   // if it is unfollow operation. Don't loadOldPosts.
+
+        // Control if any issue or not !
+        sendNotification(followedUid,"Yeni bir takipçiniz var.");
+
+    });
+
+
+// Create a new function for message isRead situation...
+// When a message read.. Make its situation isRead = true for all chatrooms.
+exports.readMessageListener = functions.database.ref("Messages/{messageUUID}")
+    .onUpdate((snap,context) =>{
+        // i can only update mychatroom... because we are not storing sender information...
+        const receiverUUID = context.auth.uid;
+        const messageUUID = context.params.messageUUID; // get message id
+
+        const senderUUID = snap.after.val().senderUUID;
+
+
+        const refChatRoom = admin.database().ref("/ChatRooms");
+        // update sender chatroom
+        refChatRoom.child(senderUUID).child(receiverUUID).child("messages").child(messageUUID).update({'read':true});
+        // update receiver chatroom
+        refChatRoom.child(receiverUUID).child(senderUUID).child("messages").child(messageUUID).update({'read':true});
+
+    });
+
+
+// When someone liked the post, send notification to publisher
+// exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
+//     .onUpdate((snap,context) =>{
+//         const ownerUUID = context.params.userUUID;
+//         const likerUUID = context.params.likerUUID;
+
+//         sendNotification(ownerUUID,"Paylaştığınız gönderi beğenildi.");
+//     });
+
+exports.postCommentListener = functions.database.ref("Posts/{postUUID}/comments/{commentUUID}")
+    .onUpdate((snap,context)=>{
+        const commentValue = snap.after.val();
+        // commentValue.comment
     });

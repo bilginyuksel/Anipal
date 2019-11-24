@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp">
 
 
     <LinearLayout
@@ -23,13 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="7dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:id="@+id/textViewFullname"
                 android:textColor="#000"
                 android:text="Ahmet"/>
@@ -37,6 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="13dp"
                 android:id="@+id/textViewLastMessage"
                 android:text="Son mesaj bölümü"/>
         </LinearLayout>
@@ -46,18 +48,18 @@
 
     <!-- Make this butotn circle -->
     <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="right"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
+        android:textSize="12dp"
         android:textColor="#fff"
-        android:backgroundTint="#084a81"
         android:layout_marginBottom="8dp"
         android:id="@+id/buttonNotReadMessages"
         android:visibility="visible"
         android:gravity="center"
-        android:background="#c1c1c1"
+        android:background="@drawable/dark_blue_circle"
         android:text="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

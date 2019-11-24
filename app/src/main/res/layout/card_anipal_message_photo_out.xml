@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_gravity="left"
+    android:id="@+id/linearLayout"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:layout_height="wrap_content">
+    <!--
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/linearLayoutSender"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ali Berk Çetin"
+        android:id="@+id/txtSender"
+        android:textSize="18dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="#000"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000"
+        android:layout_weight="1"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="10dp"/>
+
+
+</LinearLayout>
+-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/white_mes_bal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="40dp"
+        android:paddingBottom="5dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/anipallogo"
+            android:layout_gravity="left"
+            android:id="@+id/imageViewPhoto"
+            android:paddingLeft="13dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11dp"
+            android:text="10:15"
+            android:layout_gravity="right"
+            android:layout_marginTop="-15dp"
+            android:paddingLeft="10dp"
+            android:id="@+id/textViewSendDate"
+            android:paddingRight="15dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

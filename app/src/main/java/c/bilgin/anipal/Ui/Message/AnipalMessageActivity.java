@@ -1,12 +1,12 @@
-package c.bilgin.anipal.ViewModel.Message;
+package c.bilgin.anipal.Ui.Message;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,16 +18,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import c.bilgin.anipal.Adapters.Message.AnipalMessageAdapter;
-import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.Model.Message.AnipalMessage;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalMessageActivity extends AppCompatActivity {
 
@@ -36,7 +38,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private String userFullname, userUUID, userPhotoURL;
     private EditText editTextMessage;
 
-    private boolean isFirstMessage = false;
+    private boolean isFirst;
     private RecyclerView recyclerView;
     private List<AnipalMessage> messages;
     private AnipalMessageAdapter adapter;
@@ -50,7 +52,6 @@ public class AnipalMessageActivity extends AppCompatActivity {
         // configure all
         initialize();
 
-        if(messages.size()==0) isFirstMessage = true;
 
         imageButtonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,24 +61,32 @@ public class AnipalMessageActivity extends AppCompatActivity {
                 if(message.isEmpty()) // don't send it
                     return;
 
-                AnipalMessage m = new AnipalMessage(userUUID,message );
+                AnipalMessage m = new AnipalMessage(userUUID,MainActivity.currentUser.getUserUUID(),message );
 
                 // if this is a first message
                 // create chatrooms
-                if(isFirstMessage) {
+                if(isFirst) {
                     AnipalChatRoom r = new AnipalChatRoom(userUUID,userFullname,userPhotoURL); //sender chatroom
                     AnipalChatRoom r2 = new AnipalChatRoom(MainActivity.currentUser.getUserUUID()
                     ,MainActivity.currentUser.getFirstName() +" "+MainActivity.currentUser.getLastName()
                     ,MainActivity.currentUser.getPhotoURL()); // receiver chatroom
                     createChatRooms(r,r2);
+                    isFirst = false;
                 }
 
                 sendMessage(m);
                 updateUI();
-
             }
         });
+    }
 
+    private void readMessage(AnipalMessage m){
+        // control this function...
+        if(m.getReceiverUUID().equals(MainActivity.currentUser.getUserUUID())){
+            Map<String,Object> map = new HashMap<>();
+            map.put("read",true);
+            FirebaseDatabase.getInstance().getReference("Messages").child(m.getMessageUUID()).updateChildren(map);
+        }
     }
 
     private void initialize(){
@@ -94,6 +103,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
         userFullname = getIntent().getStringExtra("fullname");
         userUUID = getIntent().getStringExtra("uuid");
         userPhotoURL = getIntent().getStringExtra("photourl");
+        isFirst = getIntent().getBooleanExtra("first",true);
 
         messages = new ArrayList<>();
         adapter = new AnipalMessageAdapter(AnipalMessageActivity.this
@@ -104,14 +114,23 @@ public class AnipalMessageActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(manager);
-
-
+        recyclerView.smoothScrollToPosition(messages.size());
 
         textfullname.setText(userFullname);
         imageButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+
+        imageButtonPickFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK);
+                i.setType("image/*");
+                startActivityForResult(i,10);
             }
         });
     }
@@ -132,14 +151,28 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private void loadMessages(final List<AnipalMessage> messages, final AnipalMessageAdapter adapter){
         // We're on a chat room right now.
         // so load messages from a chatRoom
-        Query q= FirebaseDatabase.getInstance().getReference("Messages").orderByChild("sendDate");
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query q= FirebaseDatabase.getInstance().getReference("ChatRooms")
+                .child(MainActivity.currentUser.getUserUUID()).child(userUUID)
+                .child("messages").orderByChild("sendDate");
+        q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                messages.clear();
+                adapter.notifyDataSetChanged();
                 for(DataSnapshot snapshot  : dataSnapshot.getChildren()){
                     messages.add(snapshot.getValue(AnipalMessage.class));
                     adapter.notifyDataSetChanged();
+                    recyclerView.smoothScrollToPosition(messages.size());
                 }
+
+                // When all messages downloaded
+                // No need to do all that stuff. Counter is easy.
+                // for(int i = messages.size()-1;i>-1;i--){
+                    // if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && messages.get(i).isRead()) break;
+                    // if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && !messages.get(i).isRead()) readMessage(messages.get(i));
+                // }
+                if(messages.size()!=0) readM();
+
             }
 
             @Override
@@ -147,6 +180,13 @@ public class AnipalMessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void readM(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("isReadCounter",0);
+        FirebaseDatabase.getInstance().getReference("ChatRooms")
+                .child(MainActivity.currentUser.getUserUUID()).child(userUUID).updateChildren(map);
     }
 
     private void updateUI(){

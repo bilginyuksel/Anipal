@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Post;
+package c.bilgin.anipal.Ui.Post;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +9,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +24,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.UUID;
 
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
@@ -32,8 +31,8 @@ import c.bilgin.anipal.Model.Firebase.AnipalFirebasePosts;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
-import c.bilgin.anipal.ViewModel.NavigationActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.NavigationActivity;
 
 public class AnipalPostUploadActivity extends AppCompatActivity {
 
@@ -44,6 +43,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
     private AnipalFirebasePosts firebasePosts;
     private StorageReference reference;
     private EditText editTextDescription;
+    private TextView textViewPublish;
     private ProgressDialog dialog;
     int code = -1;
 
@@ -59,6 +59,8 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         buttonUploadApprove = findViewById(R.id.buttonUploadApprove);
         imageButtonBack = findViewById(R.id.imageButtonBack);
         editTextDescription = findViewById(R.id.editTextDescription);
+        textViewPublish = findViewById(R.id.textViewPublish);
+
         dialog = new ProgressDialog(this);
         firebasePosts = new AnipalFirebase(this, "Posts");
         reference = FirebaseStorage.getInstance().getReference("Posts");
@@ -76,26 +78,38 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
             code = 0;
         }
 
-            buttonUploadApprove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.show();
-                    if(code == 0) uploadPhotoPostFirebaseURI(getIntent().getData());
-                    else uploadPhotoPostFirebaseBitmap(map);
-                }
-            });
+        textViewPublish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int width = imageView.getWidth();
+                int height = imageView.getHeight();
 
-            imageButtonBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /* Issue #1 : It goes back to crop activity we don't want this.
-                    * It has to go to addPostFragment so we need to use fragment managers here
-                    * */
-                    // by the way you can set the fragments too.
-                    startActivity(new Intent(AnipalPostUploadActivity.this, NavigationActivity.class));
-                    // onBackPressed();
-                }
-            });
+                System.out.println("Width : "+width);
+                System.out.println("Height : "+height);
+            }
+        });
+
+
+        buttonUploadApprove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+                if(code == 0) uploadPhotoPostFirebaseURI(getIntent().getData());
+                else uploadPhotoPostFirebaseBitmap(map);
+            }
+        });
+
+        imageButtonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /* Issue #1 : It goes back to crop activity we don't want this.
+                * It has to go to addPostFragment so we need to use fragment managers here
+                * */
+                // by the way you can set the fragments too.
+                startActivity(new Intent(AnipalPostUploadActivity.this, NavigationActivity.class));
+                // onBackPressed();
+            }
+        });
 
     }
 
@@ -107,6 +121,8 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         String uid = UUID.randomUUID().toString();
         uid += ".png";
 
+        final int width = imageView.getWidth();
+        final int height = imageView.getHeight();
         reference.child(uid).putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -115,8 +131,8 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
                         downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                AnipalAbstractPost post =
-                                        new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),uri.toString(),editTextDescription.getText().toString());
+                                AnipalAbstractPost post = new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),
+                                        uri.toString(),editTextDescription.getText().toString(),width,height);
                                 post.setUser(MainActivity.currentUser);
                                 firebasePosts.publish(post);
                                 dialog.dismiss();
@@ -142,6 +158,9 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
     private void uploadPhotoPostFirebaseBitmap(Bitmap map){
 
+        final int width = imageView.getWidth();
+        final int height = imageView.getHeight();
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         map.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
         byte []data= byteArrayOutputStream.toByteArray();
@@ -157,8 +176,8 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
                         downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                AnipalAbstractPost post =
-                                        new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),uri.toString(),editTextDescription.getText().toString());
+                                AnipalAbstractPost post = new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),
+                                        uri.toString(),editTextDescription.getText().toString(),width,height);
                                 post.setUser(MainActivity.currentUser);
                                 firebasePosts.publish(post);
                                 dialog.dismiss();

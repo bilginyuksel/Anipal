@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ import c.bilgin.anipal.Adapters.User.AnipalUserAdapter;
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.NavigationActivity;
+import c.bilgin.anipal.Ui.NavigationActivity;
 
 public class AnipalExploreFragment extends Fragment {
 

@@ -10,6 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -17,7 +22,9 @@ import java.util.List;
 
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
+import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalChatRoomAdapter extends RecyclerView.Adapter<AnipalChatRoomAdapter.ViewHolderChatRoom> {
 
@@ -47,13 +54,25 @@ public class AnipalChatRoomAdapter extends RecyclerView.Adapter<AnipalChatRoomAd
             * */
             textViewLastMessage.setText(room.getLastMessage());
             textViewFullname.setText(room.getUserFullname());
-            Picasso.get().load(room.getUserPhotoURL()).fit().into(circularImageView);
+            //Picasso.get().load(room.getUserPhotoURL()).fit().into(circularImageView);
             btnNotReadMessages.setVisibility(View.INVISIBLE);
 
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(room.getUserUUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Picasso.get().load(dataSnapshot.getValue(AnipalUser.class).getPhotoURL()).fit().into(circularImageView);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
             if(room.getMessages()!=null){
-                int notReadCount = room.getNotReadMessagesCount();
-                if(notReadCount!=0) {
-                    btnNotReadMessages.setText(""+room.getNotReadMessagesCount());
+                if(room.getIsReadCounter()!=0) {
+                    btnNotReadMessages.setText(""+room.getIsReadCounter());
                     btnNotReadMessages.setVisibility(View.VISIBLE);
                 }else{
                     btnNotReadMessages.setText("0");

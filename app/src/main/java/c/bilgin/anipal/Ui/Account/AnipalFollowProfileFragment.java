@@ -1,6 +1,7 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.Ui.Message.AnipalMessageActivity;
+import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
 
 public class AnipalFollowProfileFragment extends Fragment {
 
@@ -62,7 +70,7 @@ public class AnipalFollowProfileFragment extends Fragment {
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Open the messaging activity with the user.
+                gotoChatRoom();
             }
         });
 
@@ -70,13 +78,50 @@ public class AnipalFollowProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // follow user. easy commands.
+                changeFollowStatus();
             }
         });
 
         return linearLayout;
     }
 
+    private void changeFollowStatus(){
 
+        if(buttonFollowUser.getText().toString().equals("Takip Et")){
+            buttonFollowUser.setText("Takibi Bırak");
+            user.getFollowers().add(MainActivity.currentUser.getUserUUID());
+            MainActivity.currentUser.getFollowing().add(user.getUserUUID());
+        }else{
+            buttonFollowUser.setText("Takip Et");
+            user.getFollowers().remove(MainActivity.currentUser.getUserUUID());
+            MainActivity.currentUser.getFollowing().remove(user.getUserUUID());
+        }
+        textViewFollowerCount.setText(""+user.getFollowers().size());
+
+        // Update data
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(MainActivity.currentUser.getUserUUID())
+                .setValue(MainActivity.currentUser);
+    }
+    private void gotoChatRoom(){
+        // Open the messaging activity with the user.
+        // Send user informations.
+        Intent i = new Intent(getContext(), AnipalMessageActivity.class);
+        i.putExtra("fullname",user.getFirstName()+" "+user.getLastName());
+        i.putExtra("uuid",user.getUserUUID());
+        i.putExtra("photourl",user.getPhotoURL());
+
+        boolean first = true;
+        boolean hasMessage = false;
+        for(AnipalChatRoom r : AnipalMessagesFragment.chatRooms){
+            if(r.getUserUUID().equals(user.getUserUUID())){
+                first = false;
+                hasMessage = !r.getLastMessage().equals("");
+            }
+        }
+        i.putExtra("first",first);
+        startActivity(i);
+    }
     private void initialize(){
         textViewFullname = linearLayout.findViewById(R.id.textViewFullname);
         imageViewProfilePhoto = linearLayout.findViewById(R.id.imageViewProfilePhoto);

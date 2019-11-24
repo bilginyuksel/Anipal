@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Message;
+package c.bilgin.anipal.Ui.Message;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +22,7 @@ import java.util.List;
 
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Adapters.User.AnipalUserAdapter;
+import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
 
@@ -96,6 +95,16 @@ public class AnipalFindUsersToMessage extends AppCompatActivity {
         i.putExtra("fullname",u.getFirstName()+" "+u.getLastName());
         i.putExtra("uuid",u.getUserUUID());
         i.putExtra("photourl",u.getPhotoURL());
+
+        boolean first = true;
+        boolean hasMessage = false;
+        for(AnipalChatRoom r : AnipalMessagesFragment.chatRooms){
+            if(r.getUserUUID().equals(u.getUserUUID())) {
+                first = false;
+                hasMessage = !r.getLastMessage().equals("");
+            }
+        }
+        if(hasMessage) i.putExtra("first",first);
         startActivity(i);
     }
 }

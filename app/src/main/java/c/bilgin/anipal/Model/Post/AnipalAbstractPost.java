@@ -1,5 +1,7 @@
 package c.bilgin.anipal.Model.Post;
 
+import android.renderscript.Sampler;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.Timestamp;
@@ -22,26 +24,21 @@ public abstract class AnipalAbstractPost implements ListItem{
     private String userUUID,postUUID;
     private Date uploadTime,lastUpdateTime;
     private AnipalUser anipalUser;
+    private long timestamp;
     //private long timestamp;
 
     public AnipalAbstractPost(){
 
     }
 
-   /* public AnipalAbstractPost(String userUUID, String postUUID,
-                              Date uploadTime, Date lastUpdateTime)
-    {
-        this.userUUID = userUUID;
-        this.postUUID = postUUID;
-        this.uploadTime = uploadTime;
-        this.lastUpdateTime = lastUpdateTime;
-    }*/
+
     public AnipalAbstractPost(String userUUID){
         // Post creation
         this.userUUID = userUUID;
         this.uploadTime = Timestamp.now().toDate();
         this.lastUpdateTime = Timestamp.now().toDate();
         this.postUUID = UUID.randomUUID().toString();
+        this.timestamp = new Date().getTime();
         //this.timestamp = Timestamp.now().toDate().getTime();
     }
 
@@ -51,6 +48,7 @@ public abstract class AnipalAbstractPost implements ListItem{
         this.uploadTime = post.uploadTime;
         // Update thing.
         this.lastUpdateTime = post.lastUpdateTime;
+        this.timestamp = post.timestamp;
         //this.timestamp = post.timestamp;
 
     }
@@ -76,6 +74,11 @@ public abstract class AnipalAbstractPost implements ListItem{
     public Date getLastUpdateTime() {
         return lastUpdateTime;
     }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
     public AnipalUser getAnipalUser() {
         return anipalUser;
     }
@@ -103,6 +106,25 @@ public abstract class AnipalAbstractPost implements ListItem{
 
             }
         });
+    }
+
+
+    public void findUser(final String uid){
+        // anipalUser = new AnipalUser();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                .child(uid);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        anipalUser = dataSnapshot.getValue(AnipalUser.class);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
 }

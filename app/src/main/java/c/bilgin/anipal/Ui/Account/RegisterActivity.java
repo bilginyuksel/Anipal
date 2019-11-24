@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;

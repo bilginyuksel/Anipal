@@ -1,16 +1,12 @@
-package c.bilgin.anipal.ViewModel.Message;
+package c.bilgin.anipal.Ui.Message;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -25,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +29,7 @@ import c.bilgin.anipal.Adapters.Message.AnipalFreqRoomAdapter;
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalMessagesFragment extends Fragment {
 
@@ -45,10 +40,23 @@ public class AnipalMessagesFragment extends Fragment {
 
     private ImageButton im;
     private RecyclerView recyclerViewChatRooms, recyclerViewFreqRooms;
-    private List<AnipalChatRoom> chatRooms;
+    public static List<AnipalChatRoom> chatRooms;
     private AnipalChatRoomAdapter chatRoomAdapter;
     private AnipalFreqRoomAdapter freqRoomAdapter;
     private ScrollView scrollView;
+
+    private static AnipalMessagesFragment instance = null;
+
+    private AnipalMessagesFragment(){
+        if(chatRooms == null) chatRooms = new ArrayList<>();
+        loadChatRooms(chatRooms);
+    }
+
+    public static AnipalMessagesFragment getInstance(){
+        if(instance == null)
+            instance = new AnipalMessagesFragment();
+        return instance;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +79,7 @@ public class AnipalMessagesFragment extends Fragment {
         recyclerViewChatRooms = scrollView.findViewById(R.id.chatRooms);
         recyclerViewFreqRooms = scrollView.findViewById(R.id.frequentRooms);
 
-        chatRooms = new ArrayList<>();
+        // chatRooms = new ArrayList<>();
         chatRoomAdapter = new AnipalChatRoomAdapter(getContext(), chatRooms, new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
@@ -87,7 +95,10 @@ public class AnipalMessagesFragment extends Fragment {
                 gotoChatRoom(chatRooms.get(pos));
             }
         });
-        loadChatRooms(chatRooms,chatRoomAdapter);
+
+        // Don't need to load chatrooms here.
+        // Load chat rooms in the constructor.
+        // loadChatRooms(chatRooms,chatRoomAdapter);
 
         // horizontal recycler view
         recyclerViewFreqRooms.setAdapter(freqRoomAdapter);
@@ -118,6 +129,8 @@ public class AnipalMessagesFragment extends Fragment {
         i.putExtra("fullname",anipalChatRoom.getUserFullname());
         i.putExtra("uuid",anipalChatRoom.getUserUUID());
         i.putExtra("photourl",anipalChatRoom.getUserPhotoURL());
+        i.putExtra("first",anipalChatRoom.getLastMessage().equals(""));
+        //i.putExtra("chat",(Serializable) anipalChatRoom.getMessages());
         startActivity(i);
     }
     private void loadChatRooms(final List<AnipalChatRoom> chatRooms, final AnipalChatRoomAdapter adapter){
@@ -133,6 +146,29 @@ public class AnipalMessagesFragment extends Fragment {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     chatRooms.add(snapshot.getValue(AnipalChatRoom.class));
                     adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadChatRooms(final List<AnipalChatRoom> rooms){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ChatRooms")
+                .child(MainActivity.currentUser.getUserUUID());
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                chatRooms.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    chatRooms.add(snapshot.getValue(AnipalChatRoom.class));
+                    // Chat Room Adapter refresh, I tried once, 20:00
+                    if(chatRoomAdapter!=null) chatRoomAdapter.notifyDataSetChanged();
+
                 }
             }
 

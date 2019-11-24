@@ -17,11 +17,11 @@ import java.util.Date;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.AnipalAccountFragment;
-import c.bilgin.anipal.ViewModel.Account.AnipalFollowProfileFragment;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
-import c.bilgin.anipal.ViewModel.NavigationActivity;
-import c.bilgin.anipal.ViewModel.Post.AnipalMakeDonationDialog;
+import c.bilgin.anipal.Ui.Account.AnipalAccountFragment;
+import c.bilgin.anipal.Ui.Account.AnipalFollowProfileFragment;
+import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.NavigationActivity;
+import c.bilgin.anipal.Ui.Post.AnipalMakeDonationDialog;
 
 public class ViewHolderDonation extends ViewHolder {
 

@@ -12,17 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewModel.Message.AnipalMessageActivity"></activity>
-        <activity android:name=".ViewModel.Message.AnipalFindUsersToMessage" />
-        <activity android:name=".ViewModel.CropActivity" />
-        <activity android:name=".ViewModel.Account.AnipalBuyCoinActivity" />
-        <activity android:name=".ViewModel.Post.AnipalPostUploadActivity" />
+        <activity android:name=".Ui.Post.CommentActivity"></activity>
         <activity
-            android:name=".ViewModel.NavigationActivity"
+            android:name=".Ui.Message.AnipalMessageActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name=".Ui.Message.AnipalFindUsersToMessage"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".Ui.CropActivity" />
+        <activity android:name=".Ui.Account.AnipalBuyCoinActivity" />
+        <activity android:name=".Ui.Post.AnipalPostUploadActivity" />
+        <activity
+            android:name=".Ui.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ViewModel.Account.RegisterActivity" />
-        <activity android:name=".ViewModel.Account.MainActivity">
+        <activity android:name=".Ui.Account.RegisterActivity" />
+        <activity android:name=".Ui.Account.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

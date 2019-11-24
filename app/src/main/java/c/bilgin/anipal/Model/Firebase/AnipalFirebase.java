@@ -24,7 +24,7 @@ import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.Model.User.AnipalUser;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 
 public class AnipalFirebase implements AnipalFirebasePosts{
@@ -60,7 +60,8 @@ public class AnipalFirebase implements AnipalFirebasePosts{
 
         // orderBy timestamp it is important!!!
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(MainActivity.currentUser.getUserUUID())
+                .orderByChild("timestamp").limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){

@@ -10,6 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -17,6 +21,7 @@ import java.util.List;
 
 import c.bilgin.anipal.Adapters.OnItemClickListener;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
+import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
 
 public class AnipalFreqRoomAdapter extends RecyclerView.Adapter<AnipalFreqRoomAdapter.ViewHolderFreqRoom> {
@@ -67,9 +72,22 @@ public class AnipalFreqRoomAdapter extends RecyclerView.Adapter<AnipalFreqRoomAd
         }
 
         public void bindType(AnipalChatRoom room){
-            Picasso.get().load(room.getUserPhotoURL()).fit().into(circularImageView);
+            // Picasso.get().load(room.getUserPhotoURL()).fit().into(circularImageView);
             String fullname = room.getUserFullname();
             textViewName.setText(fullname.split(" ")[0]);
+
+            FirebaseDatabase.getInstance().getReference("Users")
+                    .child(room.getUserUUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Picasso.get().load(dataSnapshot.getValue(AnipalUser.class).getPhotoURL()).fit().into(circularImageView);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 }

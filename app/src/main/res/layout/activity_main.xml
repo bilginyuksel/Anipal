@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAF2F3"
-    tools:context=".ViewModel.Account.MainActivity">
+    tools:context=".Ui.Account.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingBottom="40dp"
         android:background="#EAF2F3">
     <ImageView
         android:layout_width="wrap_content"
@@ -31,7 +32,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:id="@+id/editTextUsername"
             android:layout_marginTop="15dp"
             android:hint="E mail:"/>
@@ -40,7 +41,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
+            android:textSize="14dp"
             android:layout_marginTop="20dp"
             android:id="@+id/editTextPassword"
             android:inputType="textPassword"
@@ -51,6 +52,7 @@
             android:layout_height="wrap_content"
             android:text="Şifremi Unuttum?"
             android:id="@+id/textViewForgotPassword"
+            android:textSize="13dp"
             android:textColor="#43BFDE"
             android:clickable="true"
             android:layout_gravity="right" />
@@ -62,7 +64,10 @@
             android:layout_marginTop="10dp"
             android:id="@+id/buttonLogin"
             android:textColor="#FFFFFF"
-            android:textSize="16dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="14dp"
             android:background="@drawable/custom_button"
             android:textAllCaps="false"/>
 
@@ -72,6 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
+            android:textSize="12dp"
             android:textColor="#43BFDE"
             android:text="Hesabın yok mu?"/>
 
@@ -88,12 +94,12 @@
                 android:text="kayıt ol"
                 android:textStyle="bold"
                 android:textColor=" #084A81"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:layout_marginTop="10dp"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/arrowview"/>
 

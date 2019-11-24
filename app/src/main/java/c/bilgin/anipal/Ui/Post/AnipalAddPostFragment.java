@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Post;
+package c.bilgin.anipal.Ui.Post;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
-import c.bilgin.anipal.ViewModel.CropActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.CropActivity;
 
 import static android.app.Activity.RESULT_OK;
 

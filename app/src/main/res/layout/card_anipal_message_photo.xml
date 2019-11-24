@@ -43,16 +43,15 @@
         android:layout_marginLeft="40dp"
         android:paddingBottom="5dp"
         android:layout_height="wrap_content">
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome ! Ok last test try now i am going to write a big text"
             android:textColor="#fff"
-            android:textSize="16dp"
             android:layout_gravity="right"
+            android:src="@drawable/anipallogo"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
-            android:id="@+id/txtMessage"
+            android:id="@+id/imageViewPhoto"
             android:paddingBottom="15dp"
             android:layout_marginRight="30dp" />
         <TextView
@@ -61,7 +60,7 @@
             android:textSize="11dp"
             android:text="10:15"
             android:layout_gravity="right"
-            android:id="@+id/txtSendDate"
+            android:id="@+id/textViewSendDate"
             android:textColor="#d0d0d0"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"

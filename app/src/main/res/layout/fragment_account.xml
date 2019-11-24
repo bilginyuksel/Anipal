@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="13dp"
+        android:paddingBottom="5dp"
         android:background="@drawable/rounded_white_layout"
         android:orientation="horizontal">
 
@@ -51,7 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="İsim Soyisim"
-                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:textSize="18dp"
                 android:id="@+id/textViewFullname"
                 android:textStyle="bold"
                 android:textColor="#000"/>
@@ -60,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:weightSum="3"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <!-- Bagıs butonları -->
@@ -74,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         android:id="@+id/textViewStartedDonationCount"
                         android:text="6"
                         android:textColor="#000"
@@ -83,6 +85,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Açılan Bağış butonları"
+                        android:textSize="12dp"
                         android:textColor="#000"
                         android:gravity="center"/>
                 </LinearLayout>
@@ -97,7 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         android:id="@+id/textViewFedAnimals"
                         android:textColor="#000"
                         android:text="12"
@@ -106,6 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Beslenen hayvanlar"
+                        android:textSize="12dp"
                         android:textColor="#000"
                         android:gravity="center"/>
 
@@ -123,13 +127,14 @@
                         android:textStyle="bold"
                         android:textColor="#000"
                         android:id="@+id/textViewFollowerCount"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         android:text="80"
                         android:layout_gravity="center"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="Takipçi"
+                        android:textSize="12dp"
                         android:textColor="#000"
                         android:gravity="center"/>
 
@@ -158,7 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="BAKİYE:"
+                android:text="Bakiye:"
                 android:textColor="#000"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -172,13 +177,13 @@
                 android:layout_marginLeft="7dp"
                 android:text="200"
                 android:textColor="#084a81"
-                android:textSize="18dp" />
+                android:textSize="17dp" />
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/blue_pati" />
         </LinearLayout>
 
@@ -218,7 +223,7 @@
                android:layout_height="wrap_content"
                android:text="Kişisel Bilgiler"
                android:textColor="#000"
-               android:textSize="25dp"
+               android:textSize="23dp"
                android:textStyle="bold"
                app:layout_constraintEnd_toEndOf="parent"
                app:layout_constraintStart_toStartOf="parent"
@@ -461,5 +466,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
+
 </LinearLayout>
 </ScrollView>

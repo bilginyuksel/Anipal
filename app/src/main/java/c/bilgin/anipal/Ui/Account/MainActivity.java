@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,18 +13,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdReceiver;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.NavigationActivity;
+import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
+import c.bilgin.anipal.Ui.NavigationActivity;
+import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String emailAddress = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
-                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog = new ProgressDialog(MainActivity.this);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Giriş Yapılıyor...");
 
@@ -80,9 +93,8 @@ public class MainActivity extends AppCompatActivity {
                             userFuture(task.getResult().getUser().getUid());
 
                             // this progress bar almost never working.
-                            progressDialog.dismiss();
-                            Intent i = new Intent(MainActivity.this, NavigationActivity.class);
-                            startActivity(i);
+                            // progressDialog.dismiss();
+
                         }else{
                             // if not success
                             System.out.println("Something went wrong !");
@@ -105,14 +117,30 @@ public class MainActivity extends AppCompatActivity {
                         // use progress bar when data loading.
                         // because of fastly opening profile!!!
                         currentUser = dataSnapshot.getValue(AnipalUser.class);
+                        updateMessageToken(currentUser.getUserUUID());
+                        progressDialog.dismiss();
+                        AnipalMessagesFragment.getInstance();
+                        AnipalHomeFragment.getInstance();
+                        Intent i = new Intent(MainActivity.this, NavigationActivity.class);
+                        startActivity(i);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         System.out.println("CANCELLED");
                         System.out.println(databaseError.getDetails());
                     }
                 });
+    }
+
+    private void updateMessageToken(final String uid){
+        final Map<String,Object> map = new HashMap<>();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                map.put("messageToken",task.getResult().getToken());
+                databaseReference.child(uid).updateChildren(map);
+            }
+        });
     }
 
     private void initialize(){

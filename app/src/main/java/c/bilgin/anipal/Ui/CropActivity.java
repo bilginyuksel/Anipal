@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.Ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,8 +40,8 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
-import c.bilgin.anipal.ViewModel.Post.AnipalPostUploadActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.Post.AnipalPostUploadActivity;
 
 public class CropActivity extends AppCompatActivity {
 
@@ -189,7 +189,7 @@ public class CropActivity extends AppCompatActivity {
     private void updateProfilePicture(Bitmap u){
 
         StorageReference ref = FirebaseStorage.getInstance().getReference("Users");
-        ref.child(MainActivity.currentUser.getUserUUID()).delete();
+        ref.child(MainActivity.currentUser.getUserUUID()+".png").delete();
         // Change bitmap to bytearray then add to firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         u.compress(Bitmap.CompressFormat.PNG,70,baos);

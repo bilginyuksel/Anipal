@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewModel.NavigationActivity">
+    tools:context=".Ui.NavigationActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:background="#084a81"
         app:itemIconTint="#eaf2f6"
+        app:itemIconSize="22dp"
         app:itemTextColor="#FFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#eaf2f3"
-    tools:context=".ViewModel.Post.AnipalPostUploadActivity">
+    tools:context=".Ui.Post.AnipalPostUploadActivity">
 
 
     <LinearLayout
@@ -52,6 +52,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="Paylaş"
                 android:paddingBottom="8dp"
+                android:id="@+id/textViewPublish"
                 android:textColor="#fff"
                 android:layout_marginRight="14dp"
                 android:textSize="16dp"/>

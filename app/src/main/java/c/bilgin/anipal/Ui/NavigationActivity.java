@@ -1,6 +1,5 @@
-package c.bilgin.anipal.ViewModel;
+package c.bilgin.anipal.Ui;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +14,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
 
+import c.bilgin.anipal.Model.Message.AnipalMessage;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.AnipalAccountFragment;
-import c.bilgin.anipal.ViewModel.Account.AnipalExploreFragment;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
-import c.bilgin.anipal.ViewModel.Message.AnipalMessagesFragment;
-import c.bilgin.anipal.ViewModel.Post.AnipalAddPostFragment;
-import c.bilgin.anipal.ViewModel.Post.AnipalHomeFragment;
+import c.bilgin.anipal.Ui.Account.AnipalAccountFragment;
+import c.bilgin.anipal.Ui.Account.AnipalExploreFragment;
+import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
+import c.bilgin.anipal.Ui.Post.AnipalAddPostFragment;
+import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
 
 public class NavigationActivity extends AppCompatActivity {
 
@@ -40,7 +40,7 @@ public class NavigationActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_messages:
                     fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_frame_layout, new AnipalMessagesFragment());
+                    fragmentTransaction.replace(R.id.main_frame_layout, AnipalMessagesFragment.getInstance());
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_explore:
@@ -60,7 +60,7 @@ public class NavigationActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_home:
                     fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_frame_layout,new AnipalHomeFragment());
+                    fragmentTransaction.replace(R.id.main_frame_layout,AnipalHomeFragment.getInstance());
                     fragmentTransaction.commit();
                     return true;
             }
@@ -78,7 +78,7 @@ public class NavigationActivity extends AppCompatActivity {
         fragmentManager = this.getSupportFragmentManager();
         fragmentTransaction =fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.add(R.id.main_frame_layout,new AnipalHomeFragment());
+        fragmentTransaction.add(R.id.main_frame_layout,AnipalHomeFragment.getInstance());
         fragmentTransaction.commit();
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
 

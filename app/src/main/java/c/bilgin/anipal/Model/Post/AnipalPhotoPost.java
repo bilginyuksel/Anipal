@@ -10,7 +10,8 @@ public class AnipalPhotoPost extends AnipalAbstractPost{
     private String photoURL, photoDescription;
     private List<String> likers;
     // User uid writing comment and comment.
-    private HashMap<String,String> comments;
+    private HashMap<String,AnipalPostComment> comments;
+    private int width,height;
 
 
 
@@ -19,12 +20,13 @@ public class AnipalPhotoPost extends AnipalAbstractPost{
         comments = new HashMap<>();
     }
 
-    public AnipalPhotoPost(String userUUID,String photoUrl,String photoDescription) {
+    public AnipalPhotoPost(String userUUID,String photoUrl,String photoDescription,int w,int h) {
         super(userUUID);
         this.photoURL = photoUrl;
         this.likers = new ArrayList<>();
         this.photoDescription = photoDescription;
         this.comments = new HashMap<>();
+        width = w; height = h;
     }
 
     public AnipalPhotoPost(AnipalAbstractPost post) {
@@ -39,11 +41,19 @@ public class AnipalPhotoPost extends AnipalAbstractPost{
     public String getPhotoURL() {
         return photoURL;
     }
-    public HashMap<String, String> getComments() { return comments; }
+    public HashMap<String, AnipalPostComment> getComments() { return comments; }
     public String getPhotoDescription() {
         return photoDescription;
     }
     public List<String> getLikers() {
         return likers;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

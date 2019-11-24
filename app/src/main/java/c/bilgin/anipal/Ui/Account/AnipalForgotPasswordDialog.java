@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
 import android.app.Dialog;
 import android.content.Context;

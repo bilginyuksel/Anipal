@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Post;
+package c.bilgin.anipal.Ui.Post;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,13 +14,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import c.bilgin.anipal.Adapters.Post.AnipalPostAdapter;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
+import c.bilgin.anipal.Model.Post.AnipalDonationPost;
+import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalHomeFragment extends Fragment {
 
@@ -30,6 +39,22 @@ public class AnipalHomeFragment extends Fragment {
     private Context mContext;
     private AnipalFirebase anipalFirebase;
     private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static AnipalHomeFragment instance = null;
+
+    public static AnipalHomeFragment getInstance(){
+        if(instance == null)
+            instance = new AnipalHomeFragment();
+
+        return instance;
+    }
+    private AnipalHomeFragment(){
+        // load posts here.
+         if(posts == null)
+             posts = new ArrayList<>();
+
+         loadPosts(posts);
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -49,12 +74,12 @@ public class AnipalHomeFragment extends Fragment {
         recyclerView = linearLayout.findViewById(R.id.recyclerViewPosts);
         swipeRefreshLayout = linearLayout.findViewById(R.id.swipeRefreshLayout);
         anipalFirebase = new AnipalFirebase(mContext,"UserPosts");
-        posts = new ArrayList<>();
+        // posts = new ArrayList<>();
         // Create random posts.
         // Firebase post GET operation here...
         // Also get posts according to user.
         postAdapter = new AnipalPostAdapter(mContext,posts);
-        anipalFirebase.getPosts(posts,postAdapter);
+        // anipalFirebase.getPosts(posts,postAdapter);
         recyclerView.setAdapter(postAdapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
@@ -74,5 +99,41 @@ public class AnipalHomeFragment extends Fragment {
 
 
         return linearLayout;
+    }
+
+    private void loadPosts(final List<AnipalAbstractPost> posts){
+        /*
+         * UserPosts
+         *   - UserId
+         *       - Post1
+         *       - Post2
+         *   - UserId2
+         *   - UserId3*/
+        Query q1 = FirebaseDatabase.getInstance().getReference("UserPosts")
+                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp").limitToLast(20);
+        q1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                AnipalAbstractPost post ;
+                for(DataSnapshot snap : dataSnapshot.getChildren()){
+                    if(snap.hasChild("photoURL")){
+                        // Photo post
+                        post = snap.getValue(AnipalPhotoPost.class);
+                        post.findUser(post.getUserUUID());
+                    }else{
+                        // Donation post
+                        post = snap.getValue(AnipalDonationPost.class);
+                        post.findUser(post.getUserUUID());
+                    }
+                    posts.add(post);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EAF2F3"
-    tools:context=".ViewModel.Account.RegisterActivity">
+    tools:context=".Ui.Account.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,23 +32,23 @@
                 android:layout_height="wrap_content"
                 android:hint="Adınız"
                 android:id="@+id/editTextName"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:layout_marginTop="10dp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/editTextSurname"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:hint="Soyadınız"/>
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
                 android:onClick="openDatePicker"
                 android:clickable="true"
                 android:id="@+id/buttonBirthday"
@@ -58,15 +58,15 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
                 android:id="@+id/editTextEmail"
                 android:hint="E-mail Adresi"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
                 android:inputType="textPassword"
                 android:id="@+id/editTextPassword"
                 android:hint="Şifre"/>
@@ -74,9 +74,9 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:inputType="textPassword"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:id="@+id/editTextPasswordConfirmation"
                 android:hint="Şifre(Tekrar)"/>
 

@@ -43,12 +43,12 @@ public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {
                 return new ViewHolderDonation(view);
             case ListItem.TYPE_PHOTO:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_photo,parent,false);
-                return new ViewHolderPhoto(view);
+                return new ViewHolderPhoto(view,mContext);
         }
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_anipal_photo,parent,false);
         ImageView v1 = v.findViewById(R.id.imageViewPhoto);
         v1.setImageResource(R.drawable.anipallogo);
-        return new ViewHolderPhoto(v);
+        return new ViewHolderPhoto(v,mContext);
     }
 
     @Override
@@ -61,7 +61,6 @@ public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {
         // get element from your dataset at this position
         AnipalAbstractPost post = posts.get(position);
         holder.bindType(post);
-
     }
 
     @Override

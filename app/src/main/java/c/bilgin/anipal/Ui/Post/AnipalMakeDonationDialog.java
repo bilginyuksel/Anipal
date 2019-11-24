@@ -1,4 +1,4 @@
-package c.bilgin.anipal.ViewModel.Post;
+package c.bilgin.anipal.Ui.Post;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.Account.MainActivity;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalMakeDonationDialog extends Dialog {
 

@@ -1,9 +1,7 @@
-package c.bilgin.anipal.ViewModel.Account;
+package c.bilgin.anipal.Ui.Account;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -21,14 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.api.Distribution;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.ViewModel.CropActivity;
+import c.bilgin.anipal.Ui.CropActivity;
 
 
 public class AnipalAccountFragment extends Fragment {
@@ -168,6 +165,9 @@ public class AnipalAccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Gallery intent
+//                Intent i1 = new Intent(Intent.ACTION_PICK);
+//                i1.setType("*/image");
+//                startActivity(i1);
                 Intent i = new Intent(getContext(),CropActivity.class);
                 i.putExtra("code",1000); // code 0 means that you are coming to
                 // change the profile picture with image from gallery
@@ -177,5 +177,10 @@ public class AnipalAccountFragment extends Fragment {
 
         d.setContentView(l);
         d.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
