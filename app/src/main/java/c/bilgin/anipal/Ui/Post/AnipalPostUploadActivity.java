@@ -9,12 +9,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
@@ -82,11 +86,9 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         textViewPublish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int width = imageView.getWidth();
-                int height = imageView.getHeight();
-
-                System.out.println("Width : "+width);
-                System.out.println("Height : "+height);
+                dialog.show();
+                if(code == 0) uploadPhotoPostFirebaseURI(getIntent().getData());
+                else uploadPhotoPostFirebaseBitmap(map);
             }
         });
 
@@ -116,51 +118,58 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
     private void uploadPhotoPostFirebaseURI(Uri uri){
 
-        /*
-        Create uuid for unique photos. and add .png or .jpg to end of the file
-         If needed you can store names as same uid's with posts.
-         Post's uid and photos uid can be same.
-         Reduce photographs quality ! At here or at the server side.
-         */
-
         String uid = UUID.randomUUID().toString();
         uid += ".jpeg";
 
-        final int width = imageView.getWidth();
-        final int height = imageView.getHeight();
-        reference.child(uid).putFile(uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
-                        downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                AnipalAbstractPost post = new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),
-                                        uri.toString(),editTextDescription.getText().toString(),width,height);
-                                post.setUser(MainActivity.currentUser);
-                                firebasePosts.publish(post);
-                                dialog.dismiss();
-                                onBackPressed();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Failure operation while getting download link
-                                e.printStackTrace();
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Failure operation for can't download
-                        e.printStackTrace();
-                    }
-                });
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
+            byte data[] = byteArrayOutputStream.toByteArray();
+            final int width = imageView.getWidth();
+            final int height = imageView.getHeight();
+
+
+            reference.child(uid).putBytes(data)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
+                            downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    AnipalAbstractPost post = new AnipalPhotoPost(MainActivity.currentUser.getUserUUID(),
+                                            uri.toString(),editTextDescription.getText().toString(),width,height);
+                                    post.setUser(MainActivity.currentUser);
+                                    firebasePosts.publish(post);
+                                    dialog.dismiss();
+                                    onBackPressed();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Failure operation while getting download link
+                                    e.printStackTrace();
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Failure operation for can't download
+                    e.printStackTrace();
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            dialog.dismiss();
+            Toast.makeText(this, "Gönderi paylaşılırken bir hata oluştu.", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
-
-
     private void uploadPhotoPostFirebaseBitmap(Bitmap map){
 
         final int width = imageView.getWidth();

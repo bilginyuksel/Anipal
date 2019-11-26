@@ -108,10 +108,6 @@ public class AnipalAccountFragment extends Fragment {
                 // update profile
                 AnipalEditProfileDialog dialog = new AnipalEditProfileDialog(getContext());
                 dialog.show();
-                /*MainActivity.currentUser.addFollower("iDizYltsWsdCY7TKxvvGxx7Iru82");
-                MainActivity.currentUser.addFollower("tMDDuURrPKSWPIhoL0Dq7jHj3R02");
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currentUser.getUserUUID());
-                ref.setValue(MainActivity.currentUser);*/
             }
         });
 

@@ -185,9 +185,6 @@ public class CropActivity extends AppCompatActivity {
         }
     }
 
-    private void compressImage(){
-
-    }
 
     private void updateProfilePicture(Bitmap u){
 
@@ -196,8 +193,8 @@ public class CropActivity extends AppCompatActivity {
         // Change bitmap to bytearray then add to firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // try to solve, photo size problem
-        // I reduced quality 70 to 20,, photo size was 4.~7.mb
-        u.compress(Bitmap.CompressFormat.JPEG,30,baos);
+        // I reduced quality 30 to 15,, photo size was 4.~7.mb
+        u.compress(Bitmap.CompressFormat.JPEG,5,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();
