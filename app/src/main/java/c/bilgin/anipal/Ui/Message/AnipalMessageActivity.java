@@ -1,17 +1,23 @@
 package c.bilgin.anipal.Ui.Message;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,15 +25,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import c.bilgin.anipal.Adapters.Message.AnipalMessageAdapter;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.Model.Message.AnipalMessage;
+import c.bilgin.anipal.Model.Message.PhotoMessage;
+import c.bilgin.anipal.Model.Message.TextMessage;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.MainActivity;
 
@@ -37,7 +52,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private ImageButton imageButtonBack, imageButtonSendMessage, imageButtonPickFromGallery;
     private String userFullname, userUUID, userPhotoURL;
     private EditText editTextMessage;
-
+    private final static int GET_PICTURE = 10;
     private boolean isFirst;
     private RecyclerView recyclerView;
     private List<AnipalMessage> messages;
@@ -61,7 +76,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
                 if(message.isEmpty()) // don't send it
                     return;
 
-                AnipalMessage m = new AnipalMessage(userUUID,MainActivity.currentUser.getUserUUID(),message );
+                AnipalMessage m = new TextMessage(userUUID,MainActivity.currentUser.getUserUUID(),message );
 
                 // if this is a first message
                 // create chatrooms
@@ -80,14 +95,14 @@ public class AnipalMessageActivity extends AppCompatActivity {
         });
     }
 
-    private void readMessage(AnipalMessage m){
+    /*private void readMessage(AnipalMessage m){
         // control this function...
         if(m.getReceiverUUID().equals(MainActivity.currentUser.getUserUUID())){
             Map<String,Object> map = new HashMap<>();
             map.put("read",true);
             FirebaseDatabase.getInstance().getReference("Messages").child(m.getMessageUUID()).updateChildren(map);
         }
-    }
+    }*/
 
     private void initialize(){
         textfullname = findViewById(R.id.textfullname);
@@ -106,8 +121,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
         isFirst = getIntent().getBooleanExtra("first",true);
 
         messages = new ArrayList<>();
-        adapter = new AnipalMessageAdapter(AnipalMessageActivity.this
-                , messages,MainActivity.currentUser.getFirstName()+" "+MainActivity.currentUser.getLastName(),userFullname);
+        adapter = new AnipalMessageAdapter(AnipalMessageActivity.this, messages);
         loadMessages(messages,adapter);
 
         recyclerView.setAdapter(adapter);
@@ -130,7 +144,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK);
                 i.setType("image/*");
-                startActivityForResult(i,10);
+                startActivityForResult(i,GET_PICTURE);
             }
         });
     }
@@ -160,17 +174,20 @@ public class AnipalMessageActivity extends AppCompatActivity {
                 messages.clear();
                 adapter.notifyDataSetChanged();
                 for(DataSnapshot snapshot  : dataSnapshot.getChildren()){
-                    messages.add(snapshot.getValue(AnipalMessage.class));
+                    if(snapshot.hasChild("photoURL"))
+                        messages.add(snapshot.getValue(PhotoMessage.class));
+                    else
+                        messages.add(snapshot.getValue(TextMessage.class));
                     adapter.notifyDataSetChanged();
                     recyclerView.smoothScrollToPosition(messages.size());
                 }
 
-                // When all messages downloaded
-                // No need to do all that stuff. Counter is easy.
-                // for(int i = messages.size()-1;i>-1;i--){
-                    // if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && messages.get(i).isRead()) break;
-                    // if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && !messages.get(i).isRead()) readMessage(messages.get(i));
-                // }
+                /* When all messages downloaded
+                 No need to do all that stuff. Counter is easy.
+                 for(int i = messages.size()-1;i>-1;i--){
+                     if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && messages.get(i).isRead()) break;
+                     if(messages.get(i).getReceiverUUID().equals(MainActivity.currentUser.getUserUUID()) && !messages.get(i).isRead()) readMessage(messages.get(i));
+                 }*/
                 if(messages.size()!=0) readM();
 
             }
@@ -192,5 +209,50 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private void updateUI(){
         editTextMessage.getText().clear();
         // messages.add();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == AppCompatActivity.RESULT_OK)
+            if (requestCode==GET_PICTURE){
+                Uri uri = data.getData();
+                /*
+                * first of all get the photographs width and height information
+                * after that while uploading photo you need to reduce the quality of photo
+                *
+                * */
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                Bitmap map = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                map.compress(Bitmap.CompressFormat.PNG,70,byteArrayOutputStream);
+
+
+                final int imageHeight = options.outHeight;
+                final int imageWidth = options.outWidth;
+
+                String uid = UUID.randomUUID().toString();
+                uid += ".png";
+                FirebaseStorage.getInstance().getReference("Messages").child(uid).putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                String photoURL = task.getResult().toString();
+                                AnipalMessage m = new PhotoMessage(userUUID
+                                        ,MainActivity.currentUser.getUserUUID(),photoURL,300,300);
+                                m.setMessage("Fotoğraf");
+                                sendMessage(m);
+                            }
+                        });
+                    }
+                });
+
+
+                System.out.println(uri);
+            }
     }
 }

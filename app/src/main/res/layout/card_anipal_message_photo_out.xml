@@ -62,7 +62,7 @@
             android:layout_gravity="right"
             android:layout_marginTop="-15dp"
             android:paddingLeft="10dp"
-            android:id="@+id/textViewSendDate"
+            android:id="@+id/txtSendDate"
             android:paddingRight="15dp"/>
     </LinearLayout>
 

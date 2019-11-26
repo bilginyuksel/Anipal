@@ -71,11 +71,10 @@ public class CropActivity extends AppCompatActivity {
         switch(code){
 
             case 1000:
-                // you came to change profile picture
-                // go to gallery intent and pick a profile picture
-                Intent i = new Intent(Intent.ACTION_PICK);
-                i.setType("image/*");
-                startActivityForResult(i,1);
+
+                uri = getIntent().getData();
+                cropImageView.load(uri).execute(mLoadCallBack);
+                cropImageView.setCropMode(CropImageView.CropMode.CIRCLE);
 
                 break;
             case 1001:
@@ -192,7 +191,9 @@ public class CropActivity extends AppCompatActivity {
         ref.child(MainActivity.currentUser.getUserUUID()+".png").delete();
         // Change bitmap to bytearray then add to firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        u.compress(Bitmap.CompressFormat.PNG,70,baos);
+        // try to solve, photo size problem
+        // I reduced quality 70 to 20,, photo size was 4.~7.mb
+        u.compress(Bitmap.CompressFormat.PNG,20,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();
@@ -231,12 +232,6 @@ public class CropActivity extends AppCompatActivity {
 
         if(resultCode == AppCompatActivity.RESULT_OK)
         switch (requestCode){
-            case 1:
-                // You got the uri of that file
-                uri = data.getData();
-                cropImageView.load(uri).execute(mLoadCallBack);
-                cropImageView.setCropMode(CropImageView.CropMode.CIRCLE);
-                break;
             case 2:
                 // I think so there might be an issue here !
                 // You got the thumbnail of that file

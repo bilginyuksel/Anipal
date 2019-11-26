@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -38,6 +40,7 @@ public class AnipalAccountFragment extends Fragment {
     private ImageButton imageButtonProfileEdit;
     private Button buttonGetCoin;
     private ScrollView linearLayout;
+    private static final int GALLERY_INTENT_RESULT_CODE = 111;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -165,13 +168,9 @@ public class AnipalAccountFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 // Gallery intent
-//                Intent i1 = new Intent(Intent.ACTION_PICK);
-//                i1.setType("*/image");
-//                startActivity(i1);
-                Intent i = new Intent(getContext(),CropActivity.class);
-                i.putExtra("code",1000); // code 0 means that you are coming to
-                // change the profile picture with image from gallery
-                startActivity(i);
+                Intent i1 = new Intent(Intent.ACTION_PICK);
+                i1.setType("image/*");
+                startActivityForResult(i1,GALLERY_INTENT_RESULT_CODE);
             }
         });
 
@@ -182,5 +181,15 @@ public class AnipalAccountFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == AppCompatActivity.RESULT_OK)
+            if(requestCode == GALLERY_INTENT_RESULT_CODE){
+                // Uri uri = data .getData();
+                // Now send this uri to crop activity and prepare photograph
+                Intent i = new Intent(getContext(),CropActivity.class);
+                i.setData(data.getData());
+                i.putExtra("code",1000);
+                startActivity(i);
+            }
     }
 }

@@ -4,15 +4,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-public class AnipalMessage implements Serializable {
+public class AnipalMessage implements Serializable,MessageType {
     private String message,receiverUUID, messageUUID, senderUUID;
     private long sendDate;
     private boolean isRead;
-    private MessageType type;
 
     public AnipalMessage(){
 
     }
+
     public AnipalMessage(String receiverUUID,String senderUUID,String message){
         isRead = false;
         this.receiverUUID = receiverUUID;
@@ -21,13 +21,9 @@ public class AnipalMessage implements Serializable {
         this.messageUUID = UUID.randomUUID().toString();
         this.message = message;
         sendDate = new Date().getTime();
-        this.type = MessageType.TEXT_MESSAGE;
     }
 
-    public AnipalMessage(String receiverUUID, String senderUUID, String message, MessageType type){
-        this(receiverUUID,senderUUID,message);
-        this.type = type;
-    }
+
 
     public String getMessage() {
         return message;
@@ -49,11 +45,16 @@ public class AnipalMessage implements Serializable {
         return isRead;
     }
 
-    public MessageType getType() {
-        return type;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getSenderUUID() {
         return senderUUID;
+    }
+
+    @Override
+    public int getMessageType() {
+        return 0;
     }
 }

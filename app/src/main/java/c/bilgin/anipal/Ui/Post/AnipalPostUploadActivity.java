@@ -68,6 +68,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         dialog.setMessage("Gönderi paylaşılıyor. Lütfen Bekleyiniz...");
 
 
+        // Control it are we getting here !!!! ???
         if (getIntent().getByteArrayExtra("bytes") != null) {
             byte[] bytes = getIntent().getByteArrayExtra("bytes");
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -115,9 +116,13 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
     private void uploadPhotoPostFirebaseURI(Uri uri){
 
-        // Create uuid for unique photos. and add .png or .jpg to end of the file
-        // If needed you can store names as same uid's with posts.
-        // Post's uid and photos uid can be same.
+        /*
+        Create uuid for unique photos. and add .png or .jpg to end of the file
+         If needed you can store names as same uid's with posts.
+         Post's uid and photos uid can be same.
+         Reduce photographs quality ! At here or at the server side.
+         */
+
         String uid = UUID.randomUUID().toString();
         uid += ".png";
 

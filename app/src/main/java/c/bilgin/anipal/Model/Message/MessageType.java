@@ -1,5 +1,8 @@
 package c.bilgin.anipal.Model.Message;
 
-public enum MessageType {
-    TEXT_MESSAGE, PHOTO_MESSAGE
+public interface MessageType {
+    int TEXT_MESSAGE = 1;
+    int PHOTO_MESSAGE = -1;
+
+    int getMessageType();
 }

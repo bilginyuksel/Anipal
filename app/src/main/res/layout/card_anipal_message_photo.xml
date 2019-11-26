@@ -60,7 +60,7 @@
             android:textSize="11dp"
             android:text="10:15"
             android:layout_gravity="right"
-            android:id="@+id/textViewSendDate"
+            android:id="@+id/txtSendDate"
             android:textColor="#d0d0d0"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
