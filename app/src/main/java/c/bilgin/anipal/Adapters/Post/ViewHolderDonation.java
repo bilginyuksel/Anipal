@@ -67,8 +67,7 @@ public class ViewHolderDonation extends ViewHolder {
 
         // Compare upload date data with current time data
         // 1.66666667 × 100000 minutes
-        Date d = post.getUploadTime();
-        long milliSeconds = (d.getTime() - Timestamp.now().toDate().getTime());
+        long milliSeconds = (post.getTimestamp() - Timestamp.now().toDate().getTime());
         double minutes = milliSeconds * (1.66666667 / 100000);
 
         int m = (int)(Math.abs(minutes));

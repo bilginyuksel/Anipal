@@ -161,7 +161,7 @@ public class CropActivity extends AppCompatActivity {
 
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        cropped.compress(Bitmap.CompressFormat.PNG, 80, stream);
+        cropped.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         byte []bytes = stream.toByteArray();
         Intent i = new Intent(CropActivity.this, AnipalPostUploadActivity.class);
         i.putExtra("bytes",bytes);
@@ -185,19 +185,23 @@ public class CropActivity extends AppCompatActivity {
         }
     }
 
+    private void compressImage(){
+
+    }
+
     private void updateProfilePicture(Bitmap u){
 
         StorageReference ref = FirebaseStorage.getInstance().getReference("Users");
-        ref.child(MainActivity.currentUser.getUserUUID()+".png").delete();
+        ref.child(MainActivity.currentUser.getUserUUID()+".jpeg").delete();
         // Change bitmap to bytearray then add to firebase
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // try to solve, photo size problem
         // I reduced quality 70 to 20,, photo size was 4.~7.mb
-        u.compress(Bitmap.CompressFormat.PNG,20,baos);
+        u.compress(Bitmap.CompressFormat.JPEG,30,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();
-        uid+= ".png";
+        uid+= ".jpeg";
         ref.child(uid).putBytes(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -280,7 +284,7 @@ public class CropActivity extends AppCompatActivity {
         }
 
         try{
-            File f = new File(imageDirectory, Calendar.getInstance().getTimeInMillis() + ".jpg");
+            File f = new File(imageDirectory, Calendar.getInstance().getTimeInMillis() + ".jpeg");
             f.createNewFile();
             FileOutputStream fous = new FileOutputStream(f);
             fous.write(byteArrayOutputStream.toByteArray());

@@ -55,9 +55,8 @@ public class AnipalEditProfileDialog extends Dialog {
         editTextJob = findViewById(R.id.editTextJob);
 
 
-        Date d  = MainActivity.currentUser.getBirthday();
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(d.getTime());
+        c.setTimeInMillis(MainActivity.currentUser.getBirthday());
         editTextDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
         editTextMonthOfYear.setText(""+c.get(Calendar.MONTH));
         editTextYear.setText(""+c.get(Calendar.YEAR));

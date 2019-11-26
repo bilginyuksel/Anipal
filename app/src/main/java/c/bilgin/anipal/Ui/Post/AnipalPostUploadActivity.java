@@ -124,7 +124,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
          */
 
         String uid = UUID.randomUUID().toString();
-        uid += ".png";
+        uid += ".jpeg";
 
         final int width = imageView.getWidth();
         final int height = imageView.getHeight();
@@ -167,11 +167,11 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         final int height = imageView.getHeight();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        map.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        map.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
         byte []data= byteArrayOutputStream.toByteArray();
 
         String uid = UUID.randomUUID().toString();
-        uid += ".png";
+        uid += ".jpeg";
 
         reference.child(uid).putBytes(data)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

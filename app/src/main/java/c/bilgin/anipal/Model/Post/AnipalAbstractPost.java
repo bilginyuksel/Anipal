@@ -22,9 +22,8 @@ import c.bilgin.anipal.Model.User.AnipalUser;
 public abstract class AnipalAbstractPost implements ListItem{
 
     private String userUUID,postUUID;
-    private Date uploadTime,lastUpdateTime;
     private AnipalUser anipalUser;
-    private long timestamp;
+    private long timestamp,lastUpdateTime;
     //private long timestamp;
 
     public AnipalAbstractPost(){
@@ -35,8 +34,7 @@ public abstract class AnipalAbstractPost implements ListItem{
     public AnipalAbstractPost(String userUUID){
         // Post creation
         this.userUUID = userUUID;
-        this.uploadTime = Timestamp.now().toDate();
-        this.lastUpdateTime = Timestamp.now().toDate();
+        this.lastUpdateTime = new Date().getTime();
         this.postUUID = UUID.randomUUID().toString();
         this.timestamp = new Date().getTime();
         //this.timestamp = Timestamp.now().toDate().getTime();
@@ -45,7 +43,6 @@ public abstract class AnipalAbstractPost implements ListItem{
     public AnipalAbstractPost(AnipalAbstractPost post){
         this.userUUID = post.userUUID;
         this.postUUID = post.postUUID;
-        this.uploadTime = post.uploadTime;
         // Update thing.
         this.lastUpdateTime = post.lastUpdateTime;
         this.timestamp = post.timestamp;
@@ -68,10 +65,7 @@ public abstract class AnipalAbstractPost implements ListItem{
     public String getPostUUID() {
         return postUUID;
     }
-    public Date getUploadTime() {
-        return uploadTime;
-    }
-    public Date getLastUpdateTime() {
+    public long getLastUpdateTime() {
         return lastUpdateTime;
     }
 

@@ -150,7 +150,7 @@ public class AnipalFollowProfileFragment extends Fragment {
         textViewFedAnimals.setText(""+user.getDonations().size());
 
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(user.getBirthday().getTime());
+        c.setTimeInMillis(user.getBirthday());
 
         textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
         textViewMonthOfYear.setText(""+c.get(Calendar.MONTH));

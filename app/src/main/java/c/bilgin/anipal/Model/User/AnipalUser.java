@@ -10,7 +10,7 @@ import java.util.List;
 public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalUserLogin{
 
     private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL,messageToken;
-    private Date birthday,registerDate,lastLoginDate;
+    private long birthday,registerDate,lastLoginDate;
     private List<String> followers, following, posts, donations, likedPosts;
     private AnipalCoin coin;
     // it goes like that... I dont know the exact profile informations
@@ -55,8 +55,8 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         this.emailAddress = emailAddress;
         this.userUUID = userUUID;
         this.photoURL = photoURL;
-        this.birthday = birthday;
-        this.registerDate = Timestamp.now().toDate();
+        this.birthday = birthday.getTime();
+        this.registerDate = new Date().getTime();
 
         return this;
     }
@@ -99,7 +99,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public String getCitySchool() {
         return citySchool;
     }
-    public Date getBirthday() {
+    public long getBirthday() {
         return birthday;
     }
     public List<String> getFollowers() {
@@ -124,7 +124,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         return isActive;
     }
     public String getPhotoURL() { return photoURL;}
-    public Date getRegisterDate() { return registerDate; }
+    public long getRegisterDate() { return registerDate; }
     public void addFollower(String followerUUID){ this.followers.add(followerUUID); }
     public int spendAnipalCoin(int c){
         return c>coin.getCoin()?-1:coin.spendCoin(c);

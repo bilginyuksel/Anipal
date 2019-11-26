@@ -29,7 +29,7 @@ function loadOldPosts(currentUserUid, followedUserUid){
 }
 
 
-function sendNotification(userUid, message){
+function sendNotification(userUid,title, message){
     // notification send code.
 
     const payload = {
@@ -115,7 +115,7 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
         /*
         send notification to receiver
         notification stuff here */
-        sendNotification(receiver,messageData.message);
+        sendNotification(receiver,"Bir mesajınız var.",messageData.message);
 
     });
 
@@ -157,7 +157,7 @@ exports.followUserListener = functions.database.ref("Users/{userUUID}/following/
         loadOldPosts(currentUserUid,followedUid);   // if it is unfollow operation. Don't loadOldPosts.
 
         // Control if any issue or not !
-        sendNotification(followedUid,"Yeni bir takipçiniz var.");
+        sendNotification(followedUid,"Yeni bir takipçiniz var.","Yeni bir takipçiniz var.");
 
     });
 
@@ -182,17 +182,24 @@ exports.readMessageListener = functions.database.ref("Messages/{messageUUID}")
     });
 
 
-// When someone liked the post, send notification to publisher
-// exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
-//     .onUpdate((snap,context) =>{
-//         const ownerUUID = context.params.userUUID;
-//         const likerUUID = context.params.likerUUID;
+/**
+ * send notifications, when someone liked your post or makes comment to your post.
+ * 
+ */
+exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
+    .onCreate((snap,context) =>{
+        const ownerUUID = context.params.userUUID;
+        const likerUUID = context.params.likerUUID;
 
-//         sendNotification(ownerUUID,"Paylaştığınız gönderi beğenildi.");
-//     });
+        sendNotification(ownerUUID,"Gönderi","Paylaştığınız gönderi beğenildi.");
+    });
 
 exports.postCommentListener = functions.database.ref("Posts/{postUUID}/comments/{commentUUID}")
-    .onUpdate((snap,context)=>{
-        const commentValue = snap.after.val();
-        // commentValue.comment
+    .onCreate((snap,context)=>{
+        const commentValue = snap.val();
+        // get the post uidp
+        const postUUID = context.params.postUUID;
+        // find the post owner
+        
+
     });
