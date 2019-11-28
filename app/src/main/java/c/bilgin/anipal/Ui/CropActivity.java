@@ -41,7 +41,6 @@ import java.util.Calendar;
 
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.MainActivity;
-import c.bilgin.anipal.Ui.Post.AnipalPostUploadActivity;
 
 public class CropActivity extends AppCompatActivity {
 
@@ -78,25 +77,16 @@ public class CropActivity extends AppCompatActivity {
 
                 break;
             case 1001:
-                // you came to change profile picture
-                // go to camera intent and capture an image
-                startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),2);
-                break;
-            case 2000:
-                /*
-                * to add post go to gallery intent and pick a photo*/
-                System.out.println("I am here !");
-                uri = getIntent().getData();
-                Intent i1 = new Intent(CropActivity.this,AnipalPostUploadActivity.class);
-                i1.setData(uri);
-                startActivity(i1);
+                /* Get the thumbnail
+                Save the thumbnail to device
+                get uri data from file
+                 */
+                Bitmap map = (Bitmap)getIntent().getExtras().get("data");
+                File savedImage = saveImage(map);
+
+                uri = Uri.fromFile(savedImage);
                 cropImageView.load(uri).execute(mLoadCallBack);
-                cropImageView.setCropMode(CropImageView.CropMode.FREE);
-                break;
-            case 2001:
-                /*
-                * to add post go to camera intent and capture image*/
-                startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),200);
+                cropImageView.setCropMode(CropImageView.CropMode.CIRCLE);
                 break;
         }
 
@@ -108,9 +98,6 @@ public class CropActivity extends AppCompatActivity {
                 cropImageView.crop(uri).execute(mCropCallBack);
             }
         });
-
-
-
 
     }
 
@@ -136,7 +123,6 @@ public class CropActivity extends AppCompatActivity {
                 // Cropping is OK!
                 // add data to firebase and update profile picture
                 if(code==1000 || code ==1001) updateProfilePicture(cropped);
-                else if(code==2000 || code ==2001)sendPictureToPostUpload(cropped);
             }
 
             @Override
@@ -149,24 +135,6 @@ public class CropActivity extends AppCompatActivity {
     /*
     * if picture came for adding post.
     * then when you cropped send it to uploadactivity for final job.*/
-    private void sendPictureToPostUpload(@NotNull Bitmap cropped){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inDither = false;
-        options.inJustDecodeBounds = false;
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        options.inSampleSize = 1;
-        options.inPurgeable = true;
-        options.inPreferQualityOverSpeed = true;
-        options.inTempStorage=new byte[32 * 1024];
-
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        cropped.compress(Bitmap.CompressFormat.JPEG, 30, stream);
-        byte []bytes = stream.toByteArray();
-        Intent i = new Intent(CropActivity.this, AnipalPostUploadActivity.class);
-        i.putExtra("bytes",bytes);
-        startActivity(i);
-    }
     private void checkWriteExternalStoragePermission(){
         if (ContextCompat.checkSelfPermission(CropActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
@@ -184,8 +152,6 @@ public class CropActivity extends AppCompatActivity {
             }
         }
     }
-
-
     private void updateProfilePicture(Bitmap u){
 
         StorageReference ref = FirebaseStorage.getInstance().getReference("Users");
@@ -194,7 +160,7 @@ public class CropActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // try to solve, photo size problem
         // I reduced quality 30 to 15,, photo size was 4.~7.mb
-        u.compress(Bitmap.CompressFormat.JPEG,5,baos);
+        u.compress(Bitmap.CompressFormat.JPEG,15,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();
@@ -214,7 +180,6 @@ public class CropActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void updateUser(){
         DatabaseReference r= FirebaseDatabase.getInstance().getReference("Users").child(MainActivity.currentUser.getUserUUID());
         r.setValue(MainActivity.currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -227,46 +192,6 @@ public class CropActivity extends AppCompatActivity {
             }
         });
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == AppCompatActivity.RESULT_OK)
-        switch (requestCode){
-            case 2:
-                // I think so there might be an issue here !
-                // You got the thumbnail of that file
-                // First save the profile picture then get the uri
-                // with that uri fill cropImageView and do the operations !
-                File f = saveImage((Bitmap)data.getExtras().get("data"));
-                uri = Uri.fromFile(f);
-                cropImageView.load(uri).execute(mLoadCallBack);
-                cropImageView.setCropMode(CropImageView.CropMode.CIRCLE);
-                break;
-
-            case 100:
-                // you got the uri of post image
-                uri = data.getData();
-                cropImageView.load(uri).execute(mLoadCallBack);
-                cropImageView.setCropMode(CropImageView.CropMode.FREE);
-                /*
-                * min frames has to update*/
-                break;
-            case 200:
-                File f1 = saveImage((Bitmap)data.getExtras().get("data"));
-                uri = Uri.fromFile(f1);
-                cropImageView.load(uri).execute(mLoadCallBack);
-                cropImageView.setCropMode(CropImageView.CropMode.FREE);
-                /*
-                * min frames has to update */
-                break;
-            default:
-                System.out.println("I don't know it is important or not");
-                break;
-
-        }
-    }
-
     private File saveImage(Bitmap thumbnail){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);

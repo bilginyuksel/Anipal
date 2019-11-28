@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +39,7 @@ import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
 import c.bilgin.anipal.Ui.NavigationActivity;
 import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
+import c.bilgin.anipal.Ui.SplashScreen;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,10 +54,24 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ProgressDialog progressDialog;
 
+    public static SharedPreferences sharedPreferences;
+    public static SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences =this.getPreferences(Context.MODE_PRIVATE);
+        String email =sharedPreferences.getString("Email","abipal@gmail.com");
+        String password = sharedPreferences.getString("Password","0000000");
+
+        if(!email.equals("abipal@gmail.com")){
+            Intent i = new Intent(MainActivity.this, SplashScreen.class);
+            i.putExtra("Email",email);
+            i.putExtra("Password",password);
+            startActivity(i);
+        }
 
         initialize();
 
@@ -79,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String emailAddress = editTextUsername.getText().toString();
-                String password = editTextPassword.getText().toString();
+                final String emailAddress = editTextUsername.getText().toString();
+                final String password = editTextPassword.getText().toString();
                 progressDialog = new ProgressDialog(MainActivity.this);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Giriş Yapılıyor...");
@@ -91,7 +108,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             userFuture(task.getResult().getUser().getUid());
-
+                            editor =sharedPreferences.edit();
+                            editor.putString("Email",emailAddress);
+                            editor.putString("Password",password);
+                            editor.commit();
                             // this progress bar almost never working.
                             // progressDialog.dismiss();
 

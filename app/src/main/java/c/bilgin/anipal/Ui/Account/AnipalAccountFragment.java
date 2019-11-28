@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class AnipalAccountFragment extends Fragment {
     private Button buttonGetCoin;
     private ScrollView linearLayout;
     private static final int GALLERY_INTENT_RESULT_CODE = 111;
+    private static final int CAMERA_INTENT_RESULT_CODE = 11;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -86,7 +88,7 @@ public class AnipalAccountFragment extends Fragment {
         c.setTimeInMillis(MainActivity.currentUser.getBirthday());
 
         textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        textViewMonthOfYear.setText(""+c.get(Calendar.MONTH));
+        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
         textViewYear.setText(""+c.get(Calendar.YEAR));
 
         textViewPet.setText(MainActivity.currentUser.getPet()!=null?MainActivity.currentUser.getPet():"");
@@ -146,11 +148,14 @@ public class AnipalAccountFragment extends Fragment {
             public void onClick(View view) {
                 // Camera intent
                 // Issue
-                Intent i = new Intent(getContext(),CropActivity.class);
+                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(i,CAMERA_INTENT_RESULT_CODE);
+
+                // Intent i = new Intent(getContext(),CropActivity.class);
                 // code 1 means that you are coming this intent
                 // to change profile picture via capturing image by camera
-                i.putExtra("code",1001);
-                startActivity(i);
+                // i.putExtra("code",1001);
+                // startActivity(i);
             }
         });
 
@@ -185,6 +190,11 @@ public class AnipalAccountFragment extends Fragment {
                 Intent i = new Intent(getContext(),CropActivity.class);
                 i.setData(data.getData());
                 i.putExtra("code",1000);
+                startActivity(i);
+            }else if(requestCode == CAMERA_INTENT_RESULT_CODE){
+                Intent i = new Intent(getContext(),CropActivity.class);
+                i.putExtras(data);
+                i.putExtra("code",1001);
                 startActivity(i);
             }
     }

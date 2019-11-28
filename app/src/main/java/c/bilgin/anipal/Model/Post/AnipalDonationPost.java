@@ -46,6 +46,7 @@ public class AnipalDonationPost extends AnipalAbstractPost{
         return this;
     }
 
+
     public int getDonationPrice() {
         return donationPrice;
     }

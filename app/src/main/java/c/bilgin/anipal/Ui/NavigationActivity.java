@@ -95,6 +95,9 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 // forget shared preferences // delete temp db
+
+                // maybe it can't clean look how we did that
+                MainActivity.sharedPreferences.edit().clear().commit();
                 Intent i1 = new Intent(NavigationActivity.this, MainActivity.class);
                 startActivity(i1);
             }

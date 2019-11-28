@@ -82,7 +82,13 @@ public class AnipalMakeDonationDialog extends Dialog {
                 int currentDonationQuantity = post.getCurrentDonation();
 
                 if(quantity<=(maxQuantity-currentDonationQuantity) && MainActivity.currentUser.spendAnipalCoin(quantity)!=-1){
-                    post.getDonation(MainActivity.currentUser.getUserUUID(),quantity);
+                    if(post.getDonators().containsKey(MainActivity.currentUser.getUserUUID())){
+                        // It means that this user is already a donator
+                        int oldDonation = post.getDonators().get(MainActivity.currentUser.getUserUUID());
+                        post.getDonation(MainActivity.currentUser.getUserUUID(),(quantity+oldDonation));
+                    }else
+                        post.getDonation(MainActivity.currentUser.getUserUUID(),quantity);
+
                     new AnipalFirebase(mContext,"Posts").publish(post);
                     AnipalHomeFragment.postAdapter.notifyDataSetChanged();
                     // Update user
@@ -100,7 +106,7 @@ public class AnipalMakeDonationDialog extends Dialog {
                             });
 
                 }
-                else Toast.makeText(mContext, "Bağış yapmak için yeterli paranız yok.", Toast.LENGTH_SHORT).show();
+                else Toast.makeText(mContext, "Üzgünüz bağış yapamazsınız.", Toast.LENGTH_SHORT).show();
 
                 // AnipalCoin -- ## MainActivity.currentUser.deleteAnipalCoin(Integer.parseInt(editTextDonationQuantity.getText().toString()));
                 // notify adapter for instant changes.

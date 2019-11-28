@@ -34,7 +34,7 @@ function sendNotification(userUid,title, message){
 
     const payload = {
         notification:{
-            title:'Bir mesajınız var',
+            title:title,
             body:message
         }
     };
@@ -115,7 +115,13 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
         /*
         send notification to receiver
         notification stuff here */
-        sendNotification(receiver,"Bir mesajınız var.",messageData.message);
+    
+        admin.database().ref("/Users").child(sender).once("value",(data)=>{
+            const val = data.val();
+            const fullname = val.firstName + " "+val.lastName;
+            sendNotification(receiver,fullname,messageData.message);
+        });
+        // sendNotification(receiver,"Bir mesajınız var.",messageData.message);
 
     });
 
@@ -156,8 +162,13 @@ exports.followUserListener = functions.database.ref("Users/{userUUID}/following/
         // First we have to get the followed user posts.
         loadOldPosts(currentUserUid,followedUid);   // if it is unfollow operation. Don't loadOldPosts.
 
+        admin.database().ref("/Users").child(currentUserUid).once("value",(data)=>{
+            const val = data.val();
+            const fullname = val.firstName + " "+ val.lastName;
+            sendNotification(followedUid,"Yeni bir takipiçiniz var.",fullname+" sizi takip etmeye başladı.");
+        });
         // Control if any issue or not !
-        sendNotification(followedUid,"Yeni bir takipçiniz var.","Yeni bir takipçiniz var.");
+        // sendNotification(followedUid,"Yeni bir takipçiniz var.","Yeni bir takipçiniz var.");
 
     });
 
@@ -185,21 +196,38 @@ exports.readMessageListener = functions.database.ref("Messages/{messageUUID}")
 /**
  * send notifications, when someone liked your post or makes comment to your post.
  * 
+ * 
  */
 exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
-    .onCreate((snap,context) =>{
-        const ownerUUID = context.params.userUUID;
+    .onUpdate((snap,context) =>{
+        const postUUID = context.params.postUUID;
         const likerUUID = context.params.likerUUID;
 
-        sendNotification(ownerUUID,"Gönderi","Paylaştığınız gönderi beğenildi.");
+        admin.database().ref("/Posts").child(postUUID).once("value",(data)=>{
+            const val = data.val();
+            const userUUID = val.userUUID;
+            admin.database().ref("/Users").child(userUUID).once("value",(dat)=>{
+                const v = dat.val();
+                const fullname = v.firstName + " "+v.lastName;
+                sendNotification(userUUID,"Anipal",fullname+" paylaştığınız bir gönderiyi beğendi.");
+            });
+        });
     });
 
 exports.postCommentListener = functions.database.ref("Posts/{postUUID}/comments/{commentUUID}")
     .onCreate((snap,context)=>{
         const commentValue = snap.val();
+        
         // get the post uidp
         const postUUID = context.params.postUUID;
         // find the post owner
-        
+        admin.database().ref("/Posts").child(postUUID).once("value",(data)=>{
+            const val = data.val();
+            const userUUID = val.userUUID;
+            const fullname = commentValue.senderName;
+            sendNotification(userUUID,fullname+" paylaştığınız bir gönderiye yorum yaptı.",commentValue.comment);
+        });
 
+        // const fullname = commentValue.senderName;
+        // sendNotification(userUUID,fullname +" paylaştığınız bir gönderiye yorum yaptı.",commentValue.comment);
     });

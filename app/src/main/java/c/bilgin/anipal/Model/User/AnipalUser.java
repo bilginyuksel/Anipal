@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalUserLogin{
 
-    private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL,messageToken;
+    private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL,messageToken,fullname;
     private long birthday,registerDate,lastLoginDate;
     private List<String> followers, following, posts, donations, likedPosts;
     private AnipalCoin coin;
@@ -54,10 +54,11 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
         this.lastName = lastName;
         this.emailAddress = emailAddress;
         this.userUUID = userUUID;
-        this.photoURL = photoURL;
+        // this.photoURL = photoURL;
         this.birthday = birthday.getTime();
         this.registerDate = new Date().getTime();
-
+        // for sorting.
+        this.fullname = this.firstName.toLowerCase() + " "+this.lastName.toLowerCase();
         return this;
     }
 
@@ -134,6 +135,10 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     }
     public String getMessageToken() {
         return messageToken;
+    }
+
+    public String getFullname() {
+        return fullname;
     }
 
     public void setPhotoURL(String photoURL) {

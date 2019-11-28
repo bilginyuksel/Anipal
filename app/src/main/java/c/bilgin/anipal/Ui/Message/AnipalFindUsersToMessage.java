@@ -25,6 +25,7 @@ import c.bilgin.anipal.Adapters.User.AnipalUserAdapter;
 import c.bilgin.anipal.Model.Message.AnipalChatRoom;
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.Ui.Account.MainActivity;
 
 public class AnipalFindUsersToMessage extends AppCompatActivity {
 
@@ -74,21 +75,25 @@ public class AnipalFindUsersToMessage extends AppCompatActivity {
     private void loadData(final List<AnipalUser> users,final AnipalUserAdapter adapter){
         /*
         * find users which this -> followers or following
+        * I don't know if it is the efficient way of doing it.
         * */
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    users.add(snapshot.getValue(AnipalUser.class));
+        List<String> followers = MainActivity.currentUser.getFollowers();
+        for(String s : followers){
+            ref.child(s).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    users.add(dataSnapshot.getValue(AnipalUser.class));
                     adapter.notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+
+
     }
     private void gotoChatRoom(AnipalUser u){
         Intent i = new Intent(AnipalFindUsersToMessage.this,AnipalMessageActivity.class);

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,9 @@ public class AnipalAddPostFragment extends Fragment {
 
     // use this for db adding operations
     private AnipalAbstractPost post;
+
+    private static final int CAPTURE_FROM_CAMERA = 10;
+    private static final int PICK_FROM_GALLERY = 1;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -109,9 +113,8 @@ public class AnipalAddPostFragment extends Fragment {
         /*
         * direct to CropActivity with request code 2001
         * capture image via camera then crop */
-        Intent i = new Intent(getContext(),CropActivity.class);
-        i.putExtra("code",2001);
-        startActivity(i);
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(i,CAPTURE_FROM_CAMERA);
     }
     private void pickPhotoFromGallery(){
         /*
@@ -119,7 +122,7 @@ public class AnipalAddPostFragment extends Fragment {
         * pick image from gallery then crop*/
         Intent i = new Intent(Intent.ACTION_PICK);
         i.setType("image/*");
-        startActivityForResult(i,1);
+        startActivityForResult(i,PICK_FROM_GALLERY);
     }
     private void createDonationBar(){
         // Create donation bar.
@@ -142,16 +145,19 @@ public class AnipalAddPostFragment extends Fragment {
         if(resultCode != RESULT_OK)
             return;
 
-        // Request code == 1
-        if(requestCode == 1){
+        if(requestCode == PICK_FROM_GALLERY){
             Uri uri= data.getData();
             if(uri!=null){
                 Intent i = new Intent(getActivity(), AnipalPostUploadActivity.class);
                 i.setData(uri);
                 startActivity(i);
             }
+         }else if(requestCode == CAPTURE_FROM_CAMERA){
 
-         }
+            // Capture image from camera and send it to upload activity
+            Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
+            startActivity(i);
+        }
 
     }
 }

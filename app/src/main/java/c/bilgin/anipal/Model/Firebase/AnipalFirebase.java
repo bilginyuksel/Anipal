@@ -61,7 +61,7 @@ public class AnipalFirebase implements AnipalFirebasePosts{
         // orderBy timestamp it is important!!!
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference.child(MainActivity.currentUser.getUserUUID())
-                .orderByChild("timestamp").limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
+                .orderByChild("timestamp").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -99,18 +99,5 @@ public class AnipalFirebase implements AnipalFirebasePosts{
         return mContext;
     }
 
-    private void findUser(final AnipalAbstractPost post, String uid){
-        DatabaseReference r = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-        r.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                post.setUser(dataSnapshot.getValue(AnipalUser.class));
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 }

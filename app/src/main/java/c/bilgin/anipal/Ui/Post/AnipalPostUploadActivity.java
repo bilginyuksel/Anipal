@@ -116,7 +116,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
     }
 
-    private void uploadPhotoPostFirebaseURI(Uri uri){
+    private void uploadPhotoPostFirebaseURI(Uri uri) {
 
         String uid = UUID.randomUUID().toString();
         uid += ".jpeg";

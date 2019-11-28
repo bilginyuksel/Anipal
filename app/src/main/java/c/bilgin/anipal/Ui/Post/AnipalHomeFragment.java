@@ -110,7 +110,7 @@ public class AnipalHomeFragment extends Fragment {
          *   - UserId2
          *   - UserId3*/
         Query q1 = FirebaseDatabase.getInstance().getReference("UserPosts")
-                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp").limitToLast(20);
+                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp").limitToFirst(20);
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

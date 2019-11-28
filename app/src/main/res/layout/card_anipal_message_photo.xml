@@ -51,6 +51,7 @@
             android:src="@drawable/anipallogo"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
+            android:layout_weight="1"
             android:id="@+id/imageViewPhoto"
             android:paddingBottom="15dp"
             android:layout_marginRight="30dp" />

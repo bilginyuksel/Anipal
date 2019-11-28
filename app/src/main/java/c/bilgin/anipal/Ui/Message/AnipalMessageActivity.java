@@ -6,14 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +35,7 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +63,16 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private AnipalMessageAdapter adapter;
 
 
+
+    private void firstMessageStuff(){
+        AnipalChatRoom r = new AnipalChatRoom(userUUID,userFullname,userPhotoURL);
+        AnipalChatRoom r2 = new AnipalChatRoom(MainActivity.currentUser.getUserUUID(),
+         MainActivity.currentUser.getFirstName()+" "+MainActivity.currentUser.getLastName()
+        ,MainActivity.currentUser.getPhotoURL());
+        createChatRooms(r,r2);
+        isFirst = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +95,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
                 // if this is a first message
                 // create chatrooms
                 if(isFirst) {
-                    AnipalChatRoom r = new AnipalChatRoom(userUUID,userFullname,userPhotoURL); //sender chatroom
-                    AnipalChatRoom r2 = new AnipalChatRoom(MainActivity.currentUser.getUserUUID()
-                    ,MainActivity.currentUser.getFirstName() +" "+MainActivity.currentUser.getLastName()
-                    ,MainActivity.currentUser.getPhotoURL()); // receiver chatroom
-                    createChatRooms(r,r2);
-                    isFirst = false;
+                    firstMessageStuff();
                 }
 
                 sendMessage(m);
@@ -217,42 +226,43 @@ public class AnipalMessageActivity extends AppCompatActivity {
 
         if(resultCode == AppCompatActivity.RESULT_OK)
             if (requestCode==GET_PICTURE){
+
                 Uri uri = data.getData();
-                /*
-                * first of all get the photographs width and height information
-                * after that while uploading photo you need to reduce the quality of photo
-                *
-                * */
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                Bitmap map = BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                map.compress(Bitmap.CompressFormat.PNG,70,byteArrayOutputStream);
+
+                // convert uri to bitmap
+                try {
+                    Bitmap map  = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    final int width = map.getWidth();
+                    final int height = map.getHeight();
+                    map.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
+                    byte bytes[] = byteArrayOutputStream.toByteArray();
+
+                    String uid = UUID.randomUUID().toString();
+                    uid += ".jpeg";
+                    FirebaseStorage.getInstance().getReference("Messages").child(uid).putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    String photoURL = task.getResult().toString();
+                                    AnipalMessage m = new PhotoMessage(userUUID
+                                            ,MainActivity.currentUser.getUserUUID(),photoURL,width,height);
+                                    m.setMessage("Fotoğraf");
+                                    if(isFirst)firstMessageStuff();
+
+                                    sendMessage(m);
+                                }
+                            });
+                        }
+                    });
 
 
-                final int imageHeight = options.outHeight;
-                final int imageWidth = options.outWidth;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                String uid = UUID.randomUUID().toString();
-                uid += ".png";
-                FirebaseStorage.getInstance().getReference("Messages").child(uid).putFile(uri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        task.getResult().getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                String photoURL = task.getResult().toString();
-                                AnipalMessage m = new PhotoMessage(userUUID
-                                        ,MainActivity.currentUser.getUserUUID(),photoURL,300,300);
-                                m.setMessage("Fotoğraf");
-                                sendMessage(m);
-                            }
-                        });
-                    }
-                });
-
-
-                System.out.println(uri);
             }
     }
 }

@@ -109,7 +109,7 @@ public class AnipalExploreFragment extends Fragment {
 
     private void loadData(CharSequence charSequence){
         if(!charSequence.toString().isEmpty()){
-            ref.orderByChild("firstName").startAt(charSequence.toString())
+            ref.orderByChild("fullname").startAt(charSequence.toString().toLowerCase()).endAt(charSequence.toString().toLowerCase()+"\uf8ff")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -117,6 +117,7 @@ public class AnipalExploreFragment extends Fragment {
                                 anipalUsers.add(s.getValue(AnipalUser.class));
                                 anipalUserAdapter.notifyDataSetChanged();
                             }
+
                         }
 
                         @Override

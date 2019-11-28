@@ -149,6 +149,9 @@ public class ViewHolderPhoto extends ViewHolder {
             }
         });
         if(photoPost.getComments().size() != 0){
+            if(linearLayoutLikeCommentDescription.getChildCount()<3)
+                linearLayoutLikeCommentDescription.addView(textViewComment);
+            // it may cause a problem.
             textViewComment.setText(photoPost.getComments().size()+" yorumu görüntüle");
         }else{
             linearLayoutLikeCommentDescription.removeView(textViewComment);

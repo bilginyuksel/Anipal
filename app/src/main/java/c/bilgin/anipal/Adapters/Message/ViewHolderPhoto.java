@@ -1,5 +1,7 @@
 package c.bilgin.anipal.Adapters.Message;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,11 +23,13 @@ public class ViewHolderPhoto extends ViewHolder{
     private TextView txtSendDate;
     private ImageView imageViewPhoto;
     private PhotoMessage photoMessage;
+    private Context mContext;
 
     public ViewHolderPhoto(@NonNull View itemView,int type) {
         super(itemView,type);
         this.txtSendDate = itemView.findViewById(R.id.txtSendDate);
         this.imageViewPhoto = itemView.findViewById(R.id.imageViewPhoto);
+        mContext = itemView.getContext();
     }
 
     @Override
@@ -35,12 +39,17 @@ public class ViewHolderPhoto extends ViewHolder{
 
         LinearLayout.LayoutParams i = new LinearLayout.LayoutParams(imageViewPhoto.getLayoutParams());
 
-        i.height = photoMessage.getHeight();
-        i.width = photoMessage.getWidth();
-        imageViewPhoto.setLayoutParams(i);
-        imageViewPhoto.setMinimumWidth(photoMessage.getWidth());
-        imageViewPhoto.setMinimumHeight(photoMessage.getHeight());
+        // DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int max_height = 800;
 
+        if(photoMessage.getHeight()>max_height){
+            int coefficient = photoMessage.getHeight()/max_height;
+            int width  = photoMessage.getWidth() / coefficient;
+            int height = photoMessage.getHeight() / coefficient;
+            i.height = height;
+            i.width = width;
+            imageViewPhoto.setLayoutParams(i);
+        }
         Picasso.get().load(photoMessage.getPhotoURL()).fit().into(imageViewPhoto);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#000"
     tools:context=".Ui.CropActivity">
 
     <com.isseiaoki.simplecropview.CropImageView
@@ -32,6 +33,9 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
         android:id="@+id/btn"
-        android:text="Crop"/>
+        android:background="@drawable/rounded_white_layout"
+        android:text="Kırp"/>
 </LinearLayout>
