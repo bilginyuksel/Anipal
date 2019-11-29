@@ -99,9 +99,11 @@ public class AnipalFollowProfileFragment extends Fragment {
         textViewFollowerCount.setText(""+user.getFollowers().size());
 
         // Update data
+        Map<String,Object> map = new HashMap<>();
+        map.put("following",MainActivity.currentUser.getFollowing());
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(MainActivity.currentUser.getUserUUID())
-                .setValue(MainActivity.currentUser);
+                .updateChildren(map);
     }
     private void gotoChatRoom(){
         // Open the messaging activity with the user.

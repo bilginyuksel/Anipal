@@ -81,8 +81,13 @@ public class AnipalMakeDonationDialog extends Dialog {
                 int maxQuantity = post.getDonationPrice();
                 int currentDonationQuantity = post.getCurrentDonation();
 
-                if(quantity<=(maxQuantity-currentDonationQuantity) && MainActivity.currentUser.spendAnipalCoin(quantity)!=-1){
-                    if(post.getDonators().containsKey(MainActivity.currentUser.getUserUUID())){
+                System.out.println("Quantity : "+quantity);
+                System.out.println("Max Quantity : "+maxQuantity);
+                System.out.println("Current Donation Quantity : "+currentDonationQuantity);
+
+                if(maxQuantity>=(quantity+currentDonationQuantity) &&
+                        MainActivity.currentUser.spendAnipalCoin(post.getPostUUID(),quantity)!=-1){
+                    if(post.getDonators()!=null && post.getDonators().containsKey(MainActivity.currentUser.getUserUUID())){
                         // It means that this user is already a donator
                         int oldDonation = post.getDonators().get(MainActivity.currentUser.getUserUUID());
                         post.getDonation(MainActivity.currentUser.getUserUUID(),(quantity+oldDonation));
@@ -100,10 +105,10 @@ public class AnipalMakeDonationDialog extends Dialog {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(mContext, "Başarıyla tamamlandı!", Toast.LENGTH_SHORT).show();
-                                        dismiss();
                                     }
                                 }
                             });
+                    dismiss();
 
                 }
                 else Toast.makeText(mContext, "Üzgünüz bağış yapamazsınız.", Toast.LENGTH_SHORT).show();

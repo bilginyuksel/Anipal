@@ -73,11 +73,11 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
 
         // Control it are we getting here !!!! ???
-        if (getIntent().getByteArrayExtra("bytes") != null) {
-            byte[] bytes = getIntent().getByteArrayExtra("bytes");
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            map = bitmap;
-            imageView.setImageBitmap(bitmap);
+        if (getIntent().getExtras()!= null) {
+            // byte[] bytes = getIntent().getByteArrayExtra("bytes");
+            // Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            map = (Bitmap)getIntent().getExtras().get("data");
+            imageView.setImageBitmap(map);
         }else{
             imageView.setImageURI(getIntent().getData());
             code = 0;
@@ -124,7 +124,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
             byte data[] = byteArrayOutputStream.toByteArray();
             final int width = imageView.getWidth();
             final int height = imageView.getHeight();
@@ -176,7 +176,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         final int height = imageView.getHeight();
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        map.compress(Bitmap.CompressFormat.JPEG,30,byteArrayOutputStream);
+        map.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
         byte []data= byteArrayOutputStream.toByteArray();
 
         String uid = UUID.randomUUID().toString();

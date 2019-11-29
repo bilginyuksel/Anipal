@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.util.Collections;
 import java.util.List;
 
 import c.bilgin.anipal.Adapters.Post.AnipalPostAdapter;
@@ -61,7 +62,7 @@ public class AnipalFirebase implements AnipalFirebasePosts{
         // orderBy timestamp it is important!!!
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference.child(MainActivity.currentUser.getUserUUID())
-                .orderByChild("timestamp").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
+                .orderByChild("timestamp").limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
@@ -82,7 +83,7 @@ public class AnipalFirebase implements AnipalFirebasePosts{
                     adapter.notifyDataSetChanged();
 
                 }
-
+                Collections.reverse(posts);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

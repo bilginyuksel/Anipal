@@ -25,7 +25,10 @@ import androidx.fragment.app.Fragment;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.CropActivity;
@@ -96,6 +99,30 @@ public class AnipalAccountFragment extends Fragment {
         textViewJob.setText(MainActivity.currentUser.getJob()!=null?MainActivity.currentUser.getJob():"");
         textViewCitySchool.setText(MainActivity.currentUser.getCitySchool()!=null?MainActivity.currentUser.getCitySchool():"");
     }
+
+    /*public void updateUI(){
+        textViewFullname.setText(MainActivity.currentUser.getFirstName() + " "+MainActivity.currentUser.getLastName());
+        textViewCurrentAnipalCoin.setText(""+MainActivity.currentUser.getCoin().getCoin());
+        if(MainActivity.currentUser.getPhotoURL() != null)
+            Picasso.get().load(MainActivity.currentUser.getPhotoURL()).fit().into(imageViewProfilePhoto);
+
+        textViewFollowerCount.setText(""+MainActivity.currentUser.getFollowers().size());
+        // Update these values this values are complex.
+        textViewStartedDonationCount.setText(""+MainActivity.currentUser.getPosts().size());
+        textViewFedAnimals.setText(""+MainActivity.currentUser.getDonations().size());
+
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(MainActivity.currentUser.getBirthday());
+
+        textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
+        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
+        textViewYear.setText(""+c.get(Calendar.YEAR));
+
+        textViewPet.setText(MainActivity.currentUser.getPet()!=null?MainActivity.currentUser.getPet():"");
+        textViewHobies.setText(MainActivity.currentUser.getHobies()!=null?MainActivity.currentUser.getHobies():"");
+        textViewJob.setText(MainActivity.currentUser.getJob()!=null?MainActivity.currentUser.getJob():"");
+        textViewCitySchool.setText(MainActivity.currentUser.getCitySchool()!=null?MainActivity.currentUser.getCitySchool():"");
+    }*/
 
     @Nullable
     @Override

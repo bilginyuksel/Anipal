@@ -19,12 +19,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.MainActivity;
-import c.bilgin.anipal.Ui.CropActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -133,6 +137,13 @@ public class AnipalAddPostFragment extends Fragment {
         // Now with those information create donation bar.
         post = new AnipalDonationPost(MainActivity.currentUser.getUserUUID(),donationPurpose,donationPrice);
         post.setUser(MainActivity.currentUser);
+        // Add Donation post to post
+        // And update current user values.
+        MainActivity.currentUser.getPosts().add(MainActivity.currentUser.getUserUUID());
+        Map<String,Object> obj = new HashMap<>();
+        obj.put("posts",MainActivity.currentUser.getPosts());
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(MainActivity.currentUser.getUserUUID()).updateChildren(obj);
         anipalFirebase.publish(post);
         editTextDonationPrice.getText().clear();
         editTextDonationPurpose.getText().clear();
@@ -156,6 +167,7 @@ public class AnipalAddPostFragment extends Fragment {
 
             // Capture image from camera and send it to upload activity
             Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
+            i.putExtras(data);
             startActivity(i);
         }
 

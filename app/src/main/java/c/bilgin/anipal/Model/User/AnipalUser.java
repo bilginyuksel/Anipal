@@ -1,24 +1,26 @@
 package c.bilgin.anipal.Model.User;
 
-import com.google.firebase.Timestamp;
-
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalUserLogin{
 
     private String userUUID,firstName,lastName,emailAddress,job,hobies,pet,citySchool,photoURL,messageToken,fullname;
     private long birthday,registerDate,lastLoginDate;
-    private List<String> followers, following, posts, donations, likedPosts;
+    // posts is donations that you've created.
+    private List<String> followers, following, posts, likedPosts;
+    private Map<String,Integer> donations;
     private AnipalCoin coin;
     // it goes like that... I dont know the exact profile informations
     private boolean isActive ;
 
 
     public AnipalUser(){
-        donations = new ArrayList<>();
+        donations = new HashMap<>();
         likedPosts =new ArrayList<>();
         posts = new ArrayList<>();
         followers = new ArrayList<>();
@@ -44,7 +46,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
 
         // Arrays
         this.posts = new ArrayList<>();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
         this.likedPosts = new ArrayList<>();
         this.following = new ArrayList<>();
         this.followers = new ArrayList<>();
@@ -115,7 +117,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public AnipalCoin getCoin() {
         return coin;
     }
-    public List<String> getDonations() {
+    public Map<String,Integer> getDonations() {
         return donations;
     }
     public List<String> getLikedPosts() {
@@ -127,8 +129,16 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public String getPhotoURL() { return photoURL;}
     public long getRegisterDate() { return registerDate; }
     public void addFollower(String followerUUID){ this.followers.add(followerUUID); }
-    public int spendAnipalCoin(int c){
-        return c>coin.getCoin()?-1:coin.spendCoin(c);
+    public int spendAnipalCoin(String donationUUID,int c){
+        if(c<coin.getCoin()){
+            int totalDonation = 0;
+            if(donations.containsKey(donationUUID)) totalDonation = donations.get(donationUUID);
+            coin.spendCoin(c);
+            totalDonation += c;
+            donations.put(donationUUID,totalDonation);
+            return coin.getCoin();
+        }
+        return -1;
     }
     public void setJob(String job) {
         this.job = job;

@@ -1,6 +1,8 @@
 package c.bilgin.anipal.Adapters.Message;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.media.Image;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
@@ -54,5 +56,19 @@ public class ViewHolderPhoto extends ViewHolder{
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
         txtSendDate.setText(""+dateFormat.format(new Date(photoMessage.getSendDate())));
+
+        imageViewPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open dialog show pictures real size and also save it to local machine
+                Dialog d = new Dialog(mContext);
+                ImageView v = new ImageView(d.getContext());
+                v.setMinimumHeight(photoMessage.getHeight());
+                v.setMinimumWidth(photoMessage.getWidth());
+                Picasso.get().load(photoMessage.getPhotoURL()).into(v);
+                d.setContentView(v);
+                d.show();
+            }
+        });
     }
 }

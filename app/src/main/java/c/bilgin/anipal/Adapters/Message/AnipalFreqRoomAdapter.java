@@ -80,6 +80,8 @@ public class AnipalFreqRoomAdapter extends RecyclerView.Adapter<AnipalFreqRoomAd
                     .child(room.getUserUUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String url = dataSnapshot.getValue(AnipalUser.class).getPhotoURL();
+                    if(url!=null)
                     Picasso.get().load(dataSnapshot.getValue(AnipalUser.class).getPhotoURL()).fit().into(circularImageView);
                 }
 

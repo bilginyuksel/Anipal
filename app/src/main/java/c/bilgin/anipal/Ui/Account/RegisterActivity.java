@@ -124,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 Calendar c = Calendar.getInstance();
-                c.set(i,i1,i2,0,0);
+                c.set(i,i1,i2,19,0);
                 birthday = c.getTime();
                 System.out.println(birthday.toString());
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

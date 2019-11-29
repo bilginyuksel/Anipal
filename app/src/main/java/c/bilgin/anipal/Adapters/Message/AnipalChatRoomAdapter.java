@@ -61,7 +61,9 @@ public class AnipalChatRoomAdapter extends RecyclerView.Adapter<AnipalChatRoomAd
                     .child(room.getUserUUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Picasso.get().load(dataSnapshot.getValue(AnipalUser.class).getPhotoURL()).fit().into(circularImageView);
+                    String url = dataSnapshot.getValue(AnipalUser.class).getPhotoURL();
+                    if(url!=null)
+                    Picasso.get().load(url).fit().into(circularImageView);
                 }
 
                 @Override

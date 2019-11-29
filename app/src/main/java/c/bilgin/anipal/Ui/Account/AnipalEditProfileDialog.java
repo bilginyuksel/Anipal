@@ -22,6 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import c.bilgin.anipal.R;
+import c.bilgin.anipal.Ui.Message.AnipalMessageActivity;
+import c.bilgin.anipal.Ui.NavigationActivity;
 
 public class AnipalEditProfileDialog extends Dialog {
 
@@ -102,6 +104,7 @@ public class AnipalEditProfileDialog extends Dialog {
                                 }
                             }
                         });
+
                 dismiss();
             }
         });
