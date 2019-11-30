@@ -199,7 +199,7 @@ exports.readMessageListener = functions.database.ref("Messages/{messageUUID}")
  * 
  */
 exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
-    .onUpdate((snap,context) =>{
+    .onCreate((snap,context) =>{
         const postUUID = context.params.postUUID;
         const likerUUID = context.params.likerUUID;
 

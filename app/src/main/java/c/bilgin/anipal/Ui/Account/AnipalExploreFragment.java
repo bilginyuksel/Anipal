@@ -113,13 +113,13 @@ public class AnipalExploreFragment extends Fragment {
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            anipalUsers.clear();
                             for(DataSnapshot s : dataSnapshot.getChildren()){
                                 anipalUsers.add(s.getValue(AnipalUser.class));
                                 anipalUserAdapter.notifyDataSetChanged();
                             }
 
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
