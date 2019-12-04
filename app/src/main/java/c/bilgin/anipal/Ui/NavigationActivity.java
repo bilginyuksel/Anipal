@@ -19,6 +19,7 @@ import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.AnipalAccountFragment;
 import c.bilgin.anipal.Ui.Account.AnipalExploreFragment;
 import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.Message.AnipalMessageActivity;
 import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
 import c.bilgin.anipal.Ui.Post.AnipalAddPostFragment;
 import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
@@ -90,7 +91,7 @@ public class NavigationActivity extends AppCompatActivity {
         // smile
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Çıkış");
-        builder.setMessage("Uygulamadan çıkış yapmak istiyor musunuz ?");
+        builder.setMessage("Hesabınızdan çıkış yapmak istiyor musunuz ?");
         builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -99,6 +100,12 @@ public class NavigationActivity extends AppCompatActivity {
                 // maybe it can't clean look how we did that
                 MainActivity.sharedPreferences.edit().clear().commit();
                 Intent i1 = new Intent(NavigationActivity.this, MainActivity.class);
+                // kill the old fragments.
+                // and singleton objects.
+                fragmentManager = null;
+                fragmentTransaction = null;
+                AnipalHomeFragment.getInstance().kill();
+                AnipalMessagesFragment.getInstance().kill();
                 startActivity(i1);
             }
         });

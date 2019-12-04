@@ -91,7 +91,7 @@ public class AnipalAccountFragment extends Fragment {
         c.setTimeInMillis(MainActivity.currentUser.getBirthday());
 
         textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
+        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)));
         textViewYear.setText(""+c.get(Calendar.YEAR));
 
         textViewPet.setText(MainActivity.currentUser.getPet()!=null?MainActivity.currentUser.getPet():"");

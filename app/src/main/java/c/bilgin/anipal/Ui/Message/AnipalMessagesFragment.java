@@ -52,6 +52,10 @@ public class AnipalMessagesFragment extends Fragment {
         loadChatRooms(chatRooms);
     }
 
+    public void kill(){
+        instance = null;
+    }
+
     public static AnipalMessagesFragment getInstance(){
         if(instance == null)
             instance = new AnipalMessagesFragment();

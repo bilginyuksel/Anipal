@@ -139,7 +139,7 @@ public class AnipalAddPostFragment extends Fragment {
         post.setUser(MainActivity.currentUser);
         // Add Donation post to post
         // And update current user values.
-        MainActivity.currentUser.getPosts().add(MainActivity.currentUser.getUserUUID());
+        MainActivity.currentUser.getPosts().add(post.getPostUUID());
         Map<String,Object> obj = new HashMap<>();
         obj.put("posts",MainActivity.currentUser.getPosts());
         FirebaseDatabase.getInstance().getReference("Users")

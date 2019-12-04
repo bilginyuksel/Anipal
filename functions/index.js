@@ -45,6 +45,18 @@ function sendNotification(userUid,title, message){
     });
 }
 
+function refundUsersMoneyDeleteDonation(postUid, userUid){
+    admin.database().ref("/Users").child(userUid).once("value",data=>{
+        const user = data.val();
+        var price= user.donations[postUid];
+        price += user.coin['coin'];
+        var donators = user.donators;
+        delete donators[postUid];
+        // update new values.
+        admin.database().ref("/Users").child(userUid).update({'coin/coin':price,'donators':donators});
+    });
+}
+
 // This functions triggers onCreate, onUpdate and onDelete
 // Specify the function for on delete but no need at this time.
 exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
@@ -80,7 +92,6 @@ exports.sendPostToFollowers = functions.database.ref('/Posts/{postUID}')
         });
 
     });
-
 
 /*
 this functions action was onWrite() if there is any problem with uploading messages to chatroom
@@ -124,7 +135,6 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
         // sendNotification(receiver,"Bir mesajınız var.",messageData.message);
 
     });
-
 
 
 // Control this function
@@ -230,4 +240,91 @@ exports.postCommentListener = functions.database.ref("Posts/{postUUID}/comments/
 
         // const fullname = commentValue.senderName;
         // sendNotification(userUUID,fullname +" paylaştığınız bir gönderiye yorum yaptı.",commentValue.comment);
+    });
+
+// exports.postDonationListener = functions.database.ref("Posts/{postUUID}/donators")
+//     .onWrite((snap,context) =>{
+//         const donatorUUID = context.auth.uid;
+//         const postUUID = context.params.postUUID;
+//         const donationVal = snap.after.val();
+
+//         console.log("Donation Val : ",donationVal);
+        
+//         admin.database().ref("/Posts").child(postUUID).once("value",(data)=>{
+//             // find the user who creates the post
+//             const postVal = data.val();
+//             const userUUID =  postVal.userUUID;
+//             // const purpose = postVal.donationPurpose;
+//             admin.database().ref("/Users").child(donatorUUID).once("value",(data)=>{
+//                 const val = data.val();
+//                 const fullname = val.firstName + " "+val.lastName;
+//                 sendNotification(userUUID,"Bağış Barı",fullname+" bağış barınıza "+donationVal[donatorUUID]+" pati katkıda bulundu.");
+//             });
+//         });
+
+//     });
+
+
+exports.makeDonationListener = functions.database.ref("/Users/{userUUID}/donations/{donationUUID}")
+    .onWrite((snap,context)=>{
+        
+        const beforeDonationVal = snap.before.val();
+        const donationVal = snap.after.val();
+        const donatorUUID = context.params.userUUID;
+        const donationPostUUID = context.params.donationUUID;
+
+        console.log("Before Donation Value : ",beforeDonationVal);
+        console.log("Donation Value : ",donationVal);
+        console.log("Donator UUID : ",donatorUUID);
+        console.log("Donation Post UUID : ",donationPostUUID);
+        
+        const donationPrice = donationVal;
+/**
+         * after you find the donation post
+         * get the currentDonation and your donation quantity. if they are not greater than the 
+         * donation price. Make the donation otherwise don't make the donation. And by the way.
+         * if donation is cancelled. Give users money back. Otherwise make the donation and update post from here.
+         * when you make the donation increase currentDonationPrice and add yourself into donators list on the post.
+         * If you are still a donator then update your donation. 
+         */
+
+        admin.database().ref("/Posts").child(donationPostUUID).once("value",(data)=>{
+            const val = data.val();
+            const currentPrice = val.currentDonation;
+            const maxPrice = val.donationPrice;
+            const postOwnerUUID = val.userUUID;
+
+            // console.log("Value : ",val);
+            console.log({'Current Price : ':currentPrice,'Max Price : ':maxPrice, "Donation Price : ":donationPrice});
+
+            if((currentPrice+donationPrice)>maxPrice){
+                // delete donation from users donation
+                refundUsersMoneyDeleteDonation(donationPostUUID,donatorUUID);
+                return;
+            }
+            
+            // Otherwise if we can make the donation
+            // Complete all actions
+            // Current donation, donators.
+            val.currentDonation = currentPrice + donationPrice;
+            // if it exists
+            if(val.donators===undefined) {
+                val['donators']={};  
+                val.donators[donatorUUID] = donationPrice;
+            }
+            else val.donators[donatorUUID] = donationPrice+beforeDonationVal;
+            // then update post again.
+            admin.database().ref("/Posts").child(donationPostUUID).set(val); 
+            // also send notification.
+            admin.database().ref("/Users").child(donatorUUID).once("value",(data)=>{
+                const v = data.val();
+                console.log(v);
+                const fullname = v.firstName + " "+v.lastName;
+                const str = fullname+" bağış barınıza "+donationPrice+" pati katkıda bulundu.";
+                console.log("Notification : ",str);
+                console.log("Post Owner : ",postOwnerUUID);
+                sendNotification(postOwnerUUID,"Bağış Barı",str);
+            });
+        });
+        
     });

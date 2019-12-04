@@ -96,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordConfirmed(String pass1,String pass2){
+        if(pass1.length()<6 || pass2.length()<6) return false;
         return pass1.equals(pass2);
     }
 
@@ -124,7 +125,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 Calendar c = Calendar.getInstance();
-                c.set(i,i1,i2,19,0);
+                if(i1==12) {i+=1;i1=0;}
+                c.set(i,i1+1,i2,19,0);
                 birthday = c.getTime();
                 System.out.println(birthday.toString());
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

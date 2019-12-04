@@ -129,17 +129,16 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public String getPhotoURL() { return photoURL;}
     public long getRegisterDate() { return registerDate; }
     public void addFollower(String followerUUID){ this.followers.add(followerUUID); }
-    public int spendAnipalCoin(String donationUUID,int c){
-        if(c<coin.getCoin()){
-            int totalDonation = 0;
-            if(donations.containsKey(donationUUID)) totalDonation = donations.get(donationUUID);
-            coin.spendCoin(c);
-            totalDonation += c;
-            donations.put(donationUUID,totalDonation);
-            return coin.getCoin();
-        }
-        return -1;
+
+    public boolean hasMoney(int m){
+        return coin.getCoin()>=m;
     }
+
+    public void makeDonation(int m) throws NoMoneyException{
+        if(hasMoney(m)) coin.makeDonation(m);
+        else throw new NoMoneyException();
+    }
+
     public void setJob(String job) {
         this.job = job;
     }

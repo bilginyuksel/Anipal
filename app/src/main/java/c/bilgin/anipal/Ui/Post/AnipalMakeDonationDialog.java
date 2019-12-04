@@ -19,8 +19,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Post.AnipalDonationPost;
+import c.bilgin.anipal.Model.User.NoMoneyException;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.MainActivity;
 
@@ -81,40 +85,31 @@ public class AnipalMakeDonationDialog extends Dialog {
                 int maxQuantity = post.getDonationPrice();
                 int currentDonationQuantity = post.getCurrentDonation();
 
-                System.out.println("Quantity : "+quantity);
-                System.out.println("Max Quantity : "+maxQuantity);
-                System.out.println("Current Donation Quantity : "+currentDonationQuantity);
-
-                if(maxQuantity>=(quantity+currentDonationQuantity) &&
-                        MainActivity.currentUser.spendAnipalCoin(post.getPostUUID(),quantity)!=-1){
-                    if(post.getDonators()!=null && post.getDonators().containsKey(MainActivity.currentUser.getUserUUID())){
-                        // It means that this user is already a donator
-                        int oldDonation = post.getDonators().get(MainActivity.currentUser.getUserUUID());
-                        post.getDonation(MainActivity.currentUser.getUserUUID(),(quantity+oldDonation));
-                    }else
-                        post.getDonation(MainActivity.currentUser.getUserUUID(),quantity);
-
-                    new AnipalFirebase(mContext,"Posts").publish(post);
-                    AnipalHomeFragment.postAdapter.notifyDataSetChanged();
-                    // Update user
-                    // You can do it on client side.
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(MainActivity.currentUser.getUserUUID()).setValue(MainActivity.currentUser)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(mContext, "Başarıyla tamamlandı!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
+                if((quantity+currentDonationQuantity)>maxQuantity || MainActivity.currentUser.getCoin().getCoin()<quantity){
                     dismiss();
-
+                    Toast.makeText(mContext, "Üzgünüz bağış yapamazsınız.", Toast.LENGTH_SHORT).show();
                 }
-                else Toast.makeText(mContext, "Üzgünüz bağış yapamazsınız.", Toast.LENGTH_SHORT).show();
+                else {
+                    AnipalHomeFragment.postAdapter.notifyDataSetChanged();
+                    try{
+                        MainActivity.currentUser.makeDonation(quantity);
+                        Toast.makeText(mContext, "Bağışınız kontrole alındı.", Toast.LENGTH_SHORT).show();
 
-                // AnipalCoin -- ## MainActivity.currentUser.deleteAnipalCoin(Integer.parseInt(editTextDonationQuantity.getText().toString()));
-                // notify adapter for instant changes.
+                        Map<String,Object> map = new HashMap<>();
+                        map.put("donations/"+post.getPostUUID(),quantity);
+                        map.put("coin/",MainActivity.currentUser.getCoin());
+
+                        FirebaseDatabase.getInstance().getReference("Users")
+                                .child(MainActivity.currentUser.getUserUUID()).updateChildren(map);
+
+                    }catch (NoMoneyException e){
+                        Toast.makeText(mContext, "Yeterli paranız yok.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    dismiss();
+                }
+
+
 
             }
         });

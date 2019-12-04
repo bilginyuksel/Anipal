@@ -57,6 +57,10 @@ public class AnipalHomeFragment extends Fragment {
          loadPosts(posts);
     }
 
+    public void kill(){
+        instance = null;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -87,6 +91,10 @@ public class AnipalHomeFragment extends Fragment {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        // Update posts.
+        synchronized (posts){
+            postAdapter.notifyDataSetChanged();
+        }
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

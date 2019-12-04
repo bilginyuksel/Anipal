@@ -14,14 +14,14 @@ public class AnipalCoin {
         realMoney = coin/100;
     }
 
+    public void makeDonation(int c){
+        this.coin = this.coin -c ;
+    }
     public int getCoin() {
         return coin;
     }
     public int getRealMoney() {
         return realMoney;
     }
-    public int spendCoin(int c){
-        this.coin -= c;
-        return coin;
-    }
+
 }
