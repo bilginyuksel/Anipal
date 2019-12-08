@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +19,15 @@ import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,8 +124,49 @@ public class AnipalAddPostFragment extends Fragment {
         /*
         * direct to CropActivity with request code 2001
         * capture image via camera then crop */
-        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(i,CAPTURE_FROM_CAMERA);
+        /*Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(i,CAPTURE_FROM_CAMERA);*/
+        dispatchTakePictureIntent();
+    }
+
+    String currentPhotoPath;
+    private File createImageFile() throws IOException{
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_"+timestamp+"_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    private void dispatchTakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "c.bilgin.anipal.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAPTURE_FROM_CAMERA);
+            }
+        }
+
     }
     private void pickPhotoFromGallery(){
         /*
@@ -165,9 +213,12 @@ public class AnipalAddPostFragment extends Fragment {
             }
          }else if(requestCode == CAPTURE_FROM_CAMERA){
 
+            File f = new File(currentPhotoPath);
+            Uri uri = Uri.fromFile(f);
+            System.out.println(uri);
             // Capture image from camera and send it to upload activity
             Intent i = new Intent(getActivity(),AnipalPostUploadActivity.class);
-            i.putExtras(data);
+            i.setData(uri);
             startActivity(i);
         }
 

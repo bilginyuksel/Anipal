@@ -4,12 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
@@ -70,6 +76,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         reference = FirebaseStorage.getInstance().getReference("Posts");
         dialog.setTitle("Gönderi");
         dialog.setMessage("Gönderi paylaşılıyor. Lütfen Bekleyiniz...");
+        dialog.setCancelable(false);
 
 
         // Control it are we getting here !!!! ???
@@ -116,15 +123,36 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
     }
 
+
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
     private void uploadPhotoPostFirebaseURI(Uri uri) {
 
         String uid = UUID.randomUUID().toString();
         uid += ".jpeg";
 
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+            bitmap = getResizedBitmap(bitmap,500);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
+
             byte data[] = byteArrayOutputStream.toByteArray();
             final int width = imageView.getWidth();
             final int height = imageView.getHeight();
@@ -161,7 +189,7 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
                 }
             });
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             dialog.dismiss();
             Toast.makeText(this, "Gönderi paylaşılırken bir hata oluştu.", Toast.LENGTH_SHORT).show();

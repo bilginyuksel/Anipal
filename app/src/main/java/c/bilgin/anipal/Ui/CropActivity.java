@@ -152,15 +152,31 @@ public class CropActivity extends AppCompatActivity {
             }
         }
     }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
     private void updateProfilePicture(Bitmap u){
 
         StorageReference ref = FirebaseStorage.getInstance().getReference("Users");
         ref.child(MainActivity.currentUser.getUserUUID()+".jpeg").delete();
         // Change bitmap to bytearray then add to firebase
+        Bitmap map = getResizedBitmap(u,200);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // try to solve, photo size problem
         // I reduced quality 30 to 15,, photo size was 4.~7.mb
-        u.compress(Bitmap.CompressFormat.JPEG,15,baos);
+        map.compress(Bitmap.CompressFormat.JPEG,15,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();

@@ -28,7 +28,6 @@ function loadOldPosts(currentUserUid, followedUserUid){
 
 }
 
-
 function sendNotification(userUid,title, message){
     // notification send code.
 
@@ -328,3 +327,7 @@ exports.makeDonationListener = functions.database.ref("/Users/{userUUID}/donatio
         });
         
     });
+
+exports.listenStorage = functions.storage.object().onFinalize(async (object)=>{
+    console.log(object);
+});

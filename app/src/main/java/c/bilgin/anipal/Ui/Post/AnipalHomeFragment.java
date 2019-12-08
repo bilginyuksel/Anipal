@@ -54,7 +54,8 @@ public class AnipalHomeFragment extends Fragment {
          if(posts == null)
              posts = new ArrayList<>();
 
-         loadPosts(posts);
+        postAdapter = new AnipalPostAdapter(getContext(),posts);
+        loadPosts(posts);
     }
 
     public void kill(){
@@ -83,7 +84,8 @@ public class AnipalHomeFragment extends Fragment {
         // Create random posts.
         // Firebase post GET operation here...
         // Also get posts according to user.
-        postAdapter = new AnipalPostAdapter(mContext,posts);
+
+        // postAdapter = new AnipalPostAdapter(getContext(),posts);
         // anipalFirebase.getPosts(posts,postAdapter);
         recyclerView.setAdapter(postAdapter);
 
@@ -138,6 +140,7 @@ public class AnipalHomeFragment extends Fragment {
                 }
 
                 Collections.reverse(posts);
+                postAdapter.notifyDataSetChanged();
             }
 
             @Override

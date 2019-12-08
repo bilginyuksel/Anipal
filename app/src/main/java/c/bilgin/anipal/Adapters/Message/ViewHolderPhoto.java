@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 
+import java.security.interfaces.DSAKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,14 +45,11 @@ public class ViewHolderPhoto extends ViewHolder{
         // DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
         int max_height = 800;
 
-        if(photoMessage.getHeight()>max_height){
-            int coefficient = photoMessage.getHeight()/max_height;
-            int width  = photoMessage.getWidth() / coefficient;
-            int height = photoMessage.getHeight() / coefficient;
-            i.height = height;
-            i.width = width;
+
+            i.height = photoMessage.getHeight();
+            i.width = photoMessage.getWidth();
             imageViewPhoto.setLayoutParams(i);
-        }
+
         Picasso.get().load(photoMessage.getPhotoURL()).fit().into(imageViewPhoto);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy  HH:mm");
@@ -63,8 +61,14 @@ public class ViewHolderPhoto extends ViewHolder{
                 // Open dialog show pictures real size and also save it to local machine
                 Dialog d = new Dialog(mContext);
                 ImageView v = new ImageView(d.getContext());
-                v.setMinimumHeight(photoMessage.getHeight());
-                v.setMinimumWidth(photoMessage.getWidth());
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+
+                // It is upperbound
+                System.out.println("Width :"+metrics.widthPixels);
+
+                v.setMinimumWidth(photoMessage.getWidth()*2);
+                v.setMinimumHeight(photoMessage.getHeight()*2);
+
                 Picasso.get().load(photoMessage.getPhotoURL()).into(v);
                 d.setContentView(v);
                 d.show();

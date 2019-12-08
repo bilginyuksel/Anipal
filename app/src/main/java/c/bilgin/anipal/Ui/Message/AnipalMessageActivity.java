@@ -215,6 +215,21 @@ public class AnipalMessageActivity extends AppCompatActivity {
         // messages.add();
     }
 
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -227,10 +242,11 @@ public class AnipalMessageActivity extends AppCompatActivity {
                 // convert uri to bitmap
                 try {
                     Bitmap map  = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                    map = getResizedBitmap(map,500);
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     final int width = map.getWidth();
                     final int height = map.getHeight();
-                    map.compress(Bitmap.CompressFormat.JPEG,20,byteArrayOutputStream);
+                    map.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
                     byte bytes[] = byteArrayOutputStream.toByteArray();
 
                     String uid = UUID.randomUUID().toString();
