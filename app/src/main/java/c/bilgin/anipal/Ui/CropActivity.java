@@ -176,7 +176,7 @@ public class CropActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // try to solve, photo size problem
         // I reduced quality 30 to 15,, photo size was 4.~7.mb
-        map.compress(Bitmap.CompressFormat.JPEG,15,baos);
+        map.compress(Bitmap.CompressFormat.JPEG,40,baos);
         byte[] data = baos.toByteArray();
         // add bytes to firebase
         String uid = MainActivity.currentUser.getUserUUID();

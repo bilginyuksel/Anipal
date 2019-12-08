@@ -149,9 +149,9 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
         try {
 
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
-            bitmap = getResizedBitmap(bitmap,500);
+            bitmap = getResizedBitmap(bitmap,900);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,50,byteArrayOutputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,60,byteArrayOutputStream);
 
             byte data[] = byteArrayOutputStream.toByteArray();
             final int width = imageView.getWidth();
