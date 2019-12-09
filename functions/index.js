@@ -340,6 +340,6 @@ exports.makeDonationListener = functions.database.ref("/Users/{userUUID}/donatio
         
     });
 
-exports.listenStorage = functions.storage.object().onFinalize(async (object)=>{
-    console.log(object);
-});
+// exports.listenStorage = functions.storage.object().onFinalize(async (object)=>{
+//     console.log(object);
+// });

@@ -74,17 +74,15 @@ public class ViewHolderPhoto extends ViewHolder {
         if(metrics.widthPixels>photoPost.getWidth()){
             double ratio =photoPost.getWidth()/(double)photoPost.getHeight();
             width = (int)metrics.widthPixels;
-            System.out.println("Ratio :"+ratio);
-            System.out.println("Width :"+width);
             height =(int) ((double)metrics.widthPixels * ratio);
-            System.out.println("Height :"+height);
+
         }
         i.height = height;
         i.width = width;
         img.setLayoutParams(i);
         // img.setMinimumWidth(photoPost.getWidth());
         // img.setMinimumHeight(photoPost.getHeight());
-        Picasso.get().load(photoPost.getPhotoURL()).fit().centerCrop().into(img);
+        Picasso.get().load(photoPost.getPhotoURL()).resize(width,height).into(img);
 
         long milliSeconds = (post.getTimestamp() - Timestamp.now().toDate().getTime());
         double minutes = milliSeconds * (1.66666667 / 100000);
