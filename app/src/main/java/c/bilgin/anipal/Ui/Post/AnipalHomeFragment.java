@@ -93,6 +93,8 @@ public class AnipalHomeFragment extends Fragment {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        postAdapter.setContext(getContext());
+
         // Update posts.
         synchronized (posts){
             postAdapter.notifyDataSetChanged();

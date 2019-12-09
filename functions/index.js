@@ -29,14 +29,26 @@ function loadOldPosts(currentUserUid, followedUserUid){
 }
 
 function sendNotification(userUid,title, message){
-    // notification send code.
-
+    /**
+     * send notification to the user and by the way
+     * create a notification node.
+     */
     const payload = {
         notification:{
             title:title,
             body:message
         }
     };
+
+
+    notf = {
+        "title":title,
+        "message":message,
+        "userUID":userUid,
+        "timestamp":new Date().getTime(),
+    };
+    
+    admin.database().ref("/Notifications").child(userUid).push(notf);
 
     admin.database().ref("/Users").child(userUid).child("messageToken").once("value",data=>{
         const messageToken = data.val();

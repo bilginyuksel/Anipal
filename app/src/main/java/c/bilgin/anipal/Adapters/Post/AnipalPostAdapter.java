@@ -68,4 +68,7 @@ public class AnipalPostAdapter extends RecyclerView.Adapter<ViewHolder> {
         return posts.size();
     }
 
+    public void setContext(Context ctx){
+        mContext = ctx;
+    }
 }
