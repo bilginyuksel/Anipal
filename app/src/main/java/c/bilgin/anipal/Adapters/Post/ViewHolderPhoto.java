@@ -2,6 +2,8 @@ package c.bilgin.anipal.Adapters.Post;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,8 +68,19 @@ public class ViewHolderPhoto extends ViewHolder {
 
         // set photo width, height
         LinearLayout.LayoutParams i = new LinearLayout.LayoutParams(img.getLayoutParams());
-        i.height = photoPost.getHeight();
-        i.width = photoPost.getWidth();
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        int height = photoPost.getHeight();
+        int width = photoPost.getWidth();
+        if(metrics.widthPixels>photoPost.getWidth()){
+            double ratio =photoPost.getWidth()/(double)photoPost.getHeight();
+            width = (int)metrics.widthPixels;
+            System.out.println("Ratio :"+ratio);
+            System.out.println("Width :"+width);
+            height =(int) ((double)metrics.widthPixels * ratio);
+            System.out.println("Height :"+height);
+        }
+        i.height = height;
+        i.width = width;
         img.setLayoutParams(i);
         // img.setMinimumWidth(photoPost.getWidth());
         // img.setMinimumHeight(photoPost.getHeight());
@@ -134,7 +147,6 @@ public class ViewHolderPhoto extends ViewHolder {
                 NavigationActivity.fragmentTransaction.commit();
             }
         });
-
 
 
 
