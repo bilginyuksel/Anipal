@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,9 @@ public class CommentActivity extends AppCompatActivity {
 
         comments = (Map<String,AnipalPostComment>)getIntent().getSerializableExtra("comments");
         listComments = new ArrayList<>(comments.values());
+        // i don't know if it is working or not.
+        // i didn't test well.
+        Collections.sort(listComments);
         adapter = new AnipalCommentAdapter(this,listComments);
 
         recyclerViewComments.setAdapter(adapter);

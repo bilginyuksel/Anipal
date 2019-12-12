@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -118,6 +120,7 @@ public class ViewHolderPhoto extends ViewHolder {
                 }
             }
         });
+
         /*
         * if you click the button it has to update
         * post and show it on the ui
