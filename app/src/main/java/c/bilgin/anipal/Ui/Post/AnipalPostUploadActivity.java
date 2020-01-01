@@ -1,20 +1,22 @@
 package c.bilgin.anipal.Ui.Post;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,19 +25,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
+import c.bilgin.anipal.Model.FedAnimalLocation;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebase;
 import c.bilgin.anipal.Model.Firebase.AnipalFirebasePosts;
 import c.bilgin.anipal.Model.Post.AnipalAbstractPost;
@@ -56,10 +59,12 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
     private TextView textViewPublish;
     private ProgressDialog dialog;
     int code = -1;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     private Uri uri;
     private Bitmap map;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,7 +129,30 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
     }
 
 
+    private void addLocationToServer(final AnipalPhotoPost post){
+        // this method adds photo's location information to server
+        // Program thinks as when a person published post it fed animals and
+        // the persons activity marking on the map.
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationProviderClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if(location != null){
+                            // Update locations while publishing the method.
+                            FedAnimalLocation fedAnimalLocation = new FedAnimalLocation(MainActivity.currentUser.getUserUUID(),
+                                    MainActivity.currentUser.getFirstName(),MainActivity.currentUser.getLastName(),
+                                    MainActivity.currentUser.getPhotoURL(),post.getPostUUID(),
+                                    post.getPhotoURL(),post.getPhotoDescription(),location.getLatitude(),location.getLongitude());
+                            // Upload to server
+                            FirebaseDatabase.getInstance().getReference("FedAnimalLocations")
+                                    .child(fedAnimalLocation.getFedAnimalLocationUUID()).setValue(fedAnimalLocation);
+                        }
+                    }
+                });
+
+    }
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -140,7 +168,6 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
 
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
-
     private void uploadPhotoPostFirebaseURI(Uri uri) {
 
         String uid = UUID.randomUUID().toString();
@@ -170,6 +197,10 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
                                             uri.toString(),editTextDescription.getText().toString(),width,height);
                                     post.setUser(MainActivity.currentUser);
                                     firebasePosts.publish(post);
+                                    // While post publishing
+                                    // publish this posts location information too
+                                    addLocationToServer((AnipalPhotoPost)post);
+
                                     dialog.dismiss();
                                     onBackPressed();
                                 }
@@ -222,6 +253,10 @@ public class AnipalPostUploadActivity extends AppCompatActivity {
                                         uri.toString(),editTextDescription.getText().toString(),width,height);
                                 post.setUser(MainActivity.currentUser);
                                 firebasePosts.publish(post);
+                                // While post publishing
+                                // publish this posts location information too
+                                addLocationToServer((AnipalPhotoPost)post);
+
                                 dialog.dismiss();
                                 onBackPressed();
                             }

@@ -87,9 +87,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 startActivity(i);
                             }else{
                                 System.out.println("Something went wrong use text view or some kind of thing");
+                                Toast.makeText(RegisterActivity.this, "Kullanıcı oluşturulamadı.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
+                }else{
+                    if(!isContractChecked)
+                    Toast.makeText(RegisterActivity.this, "Lütfen sözleşmeyi imzalayınız. ", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(RegisterActivity.this, "Şifreniz 6 veya daha fazla karakterden oluşmalıdır.Büyük, küçük harf hassasiyetine dikkat ederek şifrelerinizi tekrar yazınız.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

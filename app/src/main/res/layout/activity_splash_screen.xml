@@ -7,14 +7,30 @@
     android:background="#eaf2f3"
     tools:context=".Ui.SplashScreen">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Anipal"
+        android:textAlignment="center"
+        android:textColor="#084a81"
+        android:textSize="30dp"
+        android:fontFamily="sans-serif-thin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/circularImageView" />
+
     <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/circularImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/anipallogo"
         android:scaleType="centerInside"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/anipallogo"
+        app:civ_border_width="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

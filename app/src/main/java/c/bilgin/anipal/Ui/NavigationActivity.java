@@ -61,7 +61,7 @@ public class NavigationActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_home:
                     fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.main_frame_layout,AnipalHomeFragment.getInstance());
+                    fragmentTransaction.replace(R.id.main_frame_layout,HomeFragment.getInstance());
                     fragmentTransaction.commit();
                     return true;
             }
@@ -79,7 +79,7 @@ public class NavigationActivity extends AppCompatActivity {
         fragmentManager = this.getSupportFragmentManager();
         fragmentTransaction =fragmentManager.beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.add(R.id.main_frame_layout,AnipalHomeFragment.getInstance());
+        fragmentTransaction.add(R.id.main_frame_layout,HomeFragment.getInstance());
         fragmentTransaction.commit();
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
 

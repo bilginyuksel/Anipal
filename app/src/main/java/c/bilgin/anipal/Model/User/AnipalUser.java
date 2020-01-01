@@ -17,6 +17,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     private AnipalCoin coin;
     // it goes like that... I dont know the exact profile informations
     private boolean isActive ;
+    private String userLogType;
 
 
     public AnipalUser(){

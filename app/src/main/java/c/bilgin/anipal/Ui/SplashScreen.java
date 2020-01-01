@@ -17,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
-import c.bilgin.anipal.Ui.Account.MainActivity;
 import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
 import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
 

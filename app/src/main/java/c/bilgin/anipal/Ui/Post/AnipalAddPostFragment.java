@@ -1,11 +1,14 @@
 package c.bilgin.anipal.Ui.Post;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,9 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -48,9 +55,11 @@ public class AnipalAddPostFragment extends Fragment {
     private ScrollView linearLayout;
     private LinearLayout layoutOpenCamera, layoutPickFromGallery;
     private AnipalFirebase anipalFirebase ;
+    private int locationCode;
 
     // use this for db adding operations
     private AnipalAbstractPost post;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     private static final int CAPTURE_FROM_CAMERA = 10;
     private static final int PICK_FROM_GALLERY = 1;
@@ -101,23 +110,54 @@ public class AnipalAddPostFragment extends Fragment {
 
 
         layoutPickFromGallery.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 // Go to android gallery intent and pick a photo
+                if(hasLocationPermission(getContext()))
                 pickPhotoFromGallery();
+                else givePermission(0);
             }
         });
 
         layoutOpenCamera.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 // Go to camera intent and take a photo
+                if(hasLocationPermission(getContext()))
                 takePhotoFromCamera();
+                else givePermission(1);
             }
         });
 
 
         return linearLayout;
+    }
+
+    private void givePermission(int location_code){
+        locationCode = location_code;
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean hasLocationPermission(Context context){
+        if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+
+            return false;
+        }
+        return true;
     }
 
     private void takePhotoFromCamera(){
@@ -222,5 +262,37 @@ public class AnipalAddPostFragment extends Fragment {
             startActivity(i);
         }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case MY_PERMISSIONS_REQUEST_LOCATION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                        // do what ever you want here.
+                        // pick one of them -- you can use magic string
+                        // this code is not working but it doesn't matter
+                        if(locationCode==0)
+                        pickPhotoFromGallery();
+                        else if(locationCode==1)
+                        takePhotoFromCamera();
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(mContext, "Yükleme yapabilmeniz için uygulama konum bilgisini açmalısınız.", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 }
