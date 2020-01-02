@@ -126,7 +126,7 @@
 
     </LinearLayout>
 
-    <!-- 2 pati 1 textview-->
+        <!-- DONATION DONATION DONATION
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -166,7 +166,6 @@
         android:background="@drawable/rounded_white_layout"
         android:orientation="vertical"
         android:layout_margin="20dp">
-        <!-- Why are we donating ! -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -197,7 +196,6 @@
 
         </RelativeLayout>
 
-        <!-- Donation money -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -233,7 +231,6 @@
 
         </RelativeLayout>
 
-        <!-- Approve button -->
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -247,6 +244,7 @@
             android:textColor="#fff"
             />
     </LinearLayout>
+    -->
     </LinearLayout>
 
 </ScrollView>

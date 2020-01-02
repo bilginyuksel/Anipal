@@ -131,7 +131,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 Calendar c = Calendar.getInstance();
-                if(i1==12) {i+=1;i1=0;}
+                System.out.println("Year : "+i);
+                System.out.println("Month : "+i1);
+                System.out.println("Day : "+i2);
                 c.set(i,i1+1,i2,19,0);
                 birthday = c.getTime();
                 System.out.println(birthday.toString());

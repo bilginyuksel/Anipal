@@ -130,6 +130,10 @@ public class AnipalMessagesFragment extends Fragment {
 
     private void gotoChatRoom(AnipalChatRoom anipalChatRoom){
         Intent i = new Intent(getContext(),AnipalMessageActivity.class);
+        int count = anipalChatRoom.getMessages().size();
+        System.out.println("*************************************");
+        System.out.println("THE SIZE OF MESSAGES : "+count);
+        System.out.println("***************************************");
         i.putExtra("fullname",anipalChatRoom.getUserFullname());
         i.putExtra("uuid",anipalChatRoom.getUserUUID());
         i.putExtra("photourl",anipalChatRoom.getUserPhotoURL());

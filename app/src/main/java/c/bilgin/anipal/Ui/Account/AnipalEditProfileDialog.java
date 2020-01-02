@@ -60,7 +60,7 @@ public class AnipalEditProfileDialog extends Dialog {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(MainActivity.currentUser.getBirthday());
         editTextDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        editTextMonthOfYear.setText(""+c.get(Calendar.MONTH));
+        editTextMonthOfYear.setText(""+c.get(Calendar.MONTH)+1);
         editTextYear.setText(""+c.get(Calendar.YEAR));
 
         // Fill birthday too !
@@ -93,6 +93,12 @@ public class AnipalEditProfileDialog extends Dialog {
                 MainActivity.currentUser.setHobies(editTextHobies.getText().toString());
                 MainActivity.currentUser.setPet(editTextPet.getText().toString());
                 MainActivity.currentUser.setJob(editTextJob.getText().toString());
+                Calendar c = Calendar.getInstance();
+                c.set(Integer.parseInt(editTextYear.getText().toString()),
+                        Integer.parseInt(editTextMonthOfYear.getText().toString()),
+                        (Integer.parseInt(editTextDayOfMonth.getText().toString())),
+                        19,0);
+                MainActivity.currentUser.setBirthday(c.getTimeInMillis());
 
                 FirebaseDatabase.getInstance().getReference("Users")
                         .child(MainActivity.currentUser.getUserUUID()).setValue(MainActivity.currentUser)

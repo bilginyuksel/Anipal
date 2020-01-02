@@ -80,13 +80,13 @@ public class AnipalAddPostFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         linearLayout=(ScrollView) inflater.inflate(R.layout.fragment_publish_post,null);
-        editTextDonationPurpose = linearLayout.findViewById(R.id.editTextDonationPurpose);
+        /*editTextDonationPurpose = linearLayout.findViewById(R.id.editTextDonationPurpose);
         buttonCreateDonationBar = linearLayout.findViewById(R.id.buttonCreateDonationBar);
-        editTextDonationPrice = linearLayout.findViewById(R.id.editTextDonationPrice);
+        editTextDonationPrice = linearLayout.findViewById(R.id.editTextDonationPrice);*/
         layoutOpenCamera = linearLayout.findViewById(R.id.layoutOpenCamera);
         layoutPickFromGallery = linearLayout.findViewById(R.id.layoutPickFromGallery);
 
-        buttonCreateDonationBar.setOnClickListener(new View.OnClickListener() {
+        /*buttonCreateDonationBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -106,7 +106,7 @@ public class AnipalAddPostFragment extends Fragment {
                 });
                 builder.show();
             }
-        });
+        });*/
 
 
         layoutPickFromGallery.setOnClickListener(new View.OnClickListener() {

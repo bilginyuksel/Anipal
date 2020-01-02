@@ -222,15 +222,17 @@ exports.readMessageListener = functions.database.ref("Messages/{messageUUID}")
 exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{likerUUID}")
     .onCreate((snap,context) =>{
         const postUUID = context.params.postUUID;
-        const likerUUID = context.params.likerUUID;
+        const likerUUID = snap.val();
 
+        console.log("Liker UUID : "+ likerUUID);
         admin.database().ref("/Posts").child(postUUID).once("value",(data)=>{
             const val = data.val();
             const userUUID = val.userUUID;
-            admin.database().ref("/Users").child(userUUID).once("value",(dat)=>{
+            admin.database().ref("/Users").child(likerUUID).once("value",(dat)=>{
                 const v = dat.val();
-                const fullname = v.firstName + " "+v.lastName;
-                sendNotification(userUUID,"Anipal",fullname+" paylaştığınız bir gönderiyi beğendi.");
+                const first_name = v.firstName;
+                const last_name = v.lastName;
+                sendNotification(userUUID,"Anipal",first_name+" "+last_name+" paylaştığınız bir gönderiyi beğendi.");
             });
         });
     });

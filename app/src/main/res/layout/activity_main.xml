@@ -115,23 +115,28 @@
 
             <!-- 3 Buttons for auto logins-->
             <!-- facebook -->
+
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/google"
+                android:id="@+id/btnGoogle"/>
+            <ImageButton
+                android:id="@+id/btnFacebook"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
                 android:background="@drawable/facebook"
-                />
+                 />
             <!-- Instagram -->
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/instagram"/>
+                android:background="@drawable/twitter"
+                android:id="@+id/btnTwitter"/>
             <!-- google -->
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/google"/>
+
         </LinearLayout>
     </LinearLayout>
     </LinearLayout>

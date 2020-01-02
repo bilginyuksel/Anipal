@@ -68,17 +68,17 @@ public class AnipalAccountFragment extends Fragment {
         textViewYear = linearLayout.findViewById(R.id.textViewYear);
         textViewMonthOfYear = linearLayout.findViewById(R.id.textViewMonthOfYear);
         textViewDayOfMonth = linearLayout.findViewById(R.id.textViewDayOfMonth);
-        textViewCurrentAnipalCoin = linearLayout.findViewById(R.id.textViewCurrentAnipalCoin);
+        // textViewCurrentAnipalCoin = linearLayout.findViewById(R.id.textViewCurrentAnipalCoin);
         textViewCitySchool = linearLayout.findViewById(R.id.textViewCitySchool);
         textViewJob = linearLayout.findViewById(R.id.textViewJob);
         textViewHobies = linearLayout.findViewById(R.id.textViewHobies);
         textViewPet = linearLayout.findViewById(R.id.textViewPet);
-        buttonGetCoin = linearLayout.findViewById(R.id.buttonGetCoin);
+        // buttonGetCoin = linearLayout.findViewById(R.id.buttonGetCoin);
 
 
         // ----------------------------------------------------
         textViewFullname.setText(MainActivity.currentUser.getFirstName() + " "+MainActivity.currentUser.getLastName());
-        textViewCurrentAnipalCoin.setText(""+MainActivity.currentUser.getCoin().getCoin());
+        // textViewCurrentAnipalCoin.setText(""+MainActivity.currentUser.getCoin().getCoin());
         if(MainActivity.currentUser.getPhotoURL() != null)
             Picasso.get().load(MainActivity.currentUser.getPhotoURL()).fit().into(imageViewProfilePhoto);
 
@@ -100,29 +100,7 @@ public class AnipalAccountFragment extends Fragment {
         textViewCitySchool.setText(MainActivity.currentUser.getCitySchool()!=null?MainActivity.currentUser.getCitySchool():"");
     }
 
-    /*public void updateUI(){
-        textViewFullname.setText(MainActivity.currentUser.getFirstName() + " "+MainActivity.currentUser.getLastName());
-        textViewCurrentAnipalCoin.setText(""+MainActivity.currentUser.getCoin().getCoin());
-        if(MainActivity.currentUser.getPhotoURL() != null)
-            Picasso.get().load(MainActivity.currentUser.getPhotoURL()).fit().into(imageViewProfilePhoto);
 
-        textViewFollowerCount.setText(""+MainActivity.currentUser.getFollowers().size());
-        // Update these values this values are complex.
-        textViewStartedDonationCount.setText(""+MainActivity.currentUser.getPosts().size());
-        textViewFedAnimals.setText(""+MainActivity.currentUser.getDonations().size());
-
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(MainActivity.currentUser.getBirthday());
-
-        textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
-        textViewYear.setText(""+c.get(Calendar.YEAR));
-
-        textViewPet.setText(MainActivity.currentUser.getPet()!=null?MainActivity.currentUser.getPet():"");
-        textViewHobies.setText(MainActivity.currentUser.getHobies()!=null?MainActivity.currentUser.getHobies():"");
-        textViewJob.setText(MainActivity.currentUser.getJob()!=null?MainActivity.currentUser.getJob():"");
-        textViewCitySchool.setText(MainActivity.currentUser.getCitySchool()!=null?MainActivity.currentUser.getCitySchool():"");
-    }*/
 
     @Nullable
     @Override
@@ -148,13 +126,13 @@ public class AnipalAccountFragment extends Fragment {
         });
 
 
-        buttonGetCoin.setOnClickListener(new View.OnClickListener() {
+        /*buttonGetCoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(),AnipalBuyCoinActivity.class);
                 startActivity(i);
             }
-        });
+        });*/
 
         return linearLayout;
     }

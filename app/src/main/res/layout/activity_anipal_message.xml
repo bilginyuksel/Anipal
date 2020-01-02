@@ -38,13 +38,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/recyclerViewMessages"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"/>
+        android:id="@+id/swipeOldMessages">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerViewMessages"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

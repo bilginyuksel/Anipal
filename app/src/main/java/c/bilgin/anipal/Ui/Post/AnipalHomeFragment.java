@@ -1,14 +1,17 @@
 package c.bilgin.anipal.Ui.Post;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +34,7 @@ import c.bilgin.anipal.Model.Post.AnipalDonationPost;
 import c.bilgin.anipal.Model.Post.AnipalPhotoPost;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.MainActivity;
+import c.bilgin.anipal.Ui.HomeFragment;
 
 public class AnipalHomeFragment extends Fragment {
 
@@ -40,6 +44,8 @@ public class AnipalHomeFragment extends Fragment {
     private Context mContext;
     private AnipalFirebase anipalFirebase;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ImageButton btnMap;
+    private boolean isLoading = false;
 
     private static AnipalHomeFragment instance = null;
 
@@ -73,23 +79,33 @@ public class AnipalHomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayout linearLayout = (LinearLayout)inflater.inflate(R.layout.fragment_home,null);
+        final LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_home,null);
         recyclerView = linearLayout.findViewById(R.id.recyclerViewPosts);
         swipeRefreshLayout = linearLayout.findViewById(R.id.swipeRefreshLayout);
+        btnMap = linearLayout.findViewById(R.id.btnMap);
         anipalFirebase = new AnipalFirebase(mContext,"UserPosts");
+
         // posts = new ArrayList<>();
         // Create random posts.
         // Firebase post GET operation here...
         // Also get posts according to user.
 
+        btnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HomeFragment.getInstance().pager.setCurrentItem(1);
+            }
+        });
+
         // postAdapter = new AnipalPostAdapter(getContext(),posts);
         // anipalFirebase.getPosts(posts,postAdapter);
         recyclerView.setAdapter(postAdapter);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -110,6 +126,25 @@ public class AnipalHomeFragment extends Fragment {
             }
         });
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int first_visible = linearLayoutManager.findFirstVisibleItemPosition();
+                int last_visible = linearLayoutManager.findLastVisibleItemPosition();
+
+                System.out.println("Last Visible : "+last_visible);
+                System.out.println("Item Count : "+(postAdapter.getItemCount()-1));
+                System.out.println("Is Loading : "+isLoading);
+                if( last_visible == postAdapter.getItemCount()-1){
+                    // it should'nt be async, it should wait.
+                    if(!isLoading && posts.size()>0) {
+                        loadMorePosts(posts);
+                    }
+                }
+
+            }
+        });
 
         return linearLayout;
     }
@@ -123,7 +158,8 @@ public class AnipalHomeFragment extends Fragment {
          *   - UserId2
          *   - UserId3*/
         Query q1 = FirebaseDatabase.getInstance().getReference("UserPosts")
-                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp").limitToLast(20);
+                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp")
+                .limitToLast(5);
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -143,6 +179,52 @@ public class AnipalHomeFragment extends Fragment {
 
                 Collections.reverse(posts);
                 postAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+    private void loadMorePosts(final List<AnipalAbstractPost> posts){
+        isLoading = true;
+        /*
+         * UserPosts
+         *   - UserId
+         *       - Post1
+         *       - Post2
+         *   - UserId2
+         *   - UserId3*/
+        final ArrayList<AnipalAbstractPost> tmpPosts = new ArrayList<>();
+        Query q1 = FirebaseDatabase.getInstance().getReference("UserPosts")
+                .child(MainActivity.currentUser.getUserUUID()).orderByChild("timestamp")
+                .endAt(posts.get(posts.size()-1).getTimestamp()).limitToLast(5);
+        q1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                AnipalAbstractPost post ;
+                for(DataSnapshot snap : dataSnapshot.getChildren()){
+                    if(snap.hasChild("photoURL")){
+                        // Photo post
+                        post = snap.getValue(AnipalPhotoPost.class);
+                        post.findUser(post.getUserUUID());
+                    }else{
+                        // Donation post
+                        post = snap.getValue(AnipalDonationPost.class);
+                        post.findUser(post.getUserUUID());
+                    }
+                    tmpPosts.add(post);
+                }
+
+                Collections.reverse(tmpPosts);
+                tmpPosts.remove(0);
+                if(tmpPosts.size()>0) posts.addAll(tmpPosts);
+                postAdapter.notifyDataSetChanged();
+                isLoading = false;
             }
 
             @Override

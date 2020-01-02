@@ -8,4 +8,7 @@
     <string name="title_home">Ana Sayfa</string>
     <string name="title_activity_maps">Harita</string>
     <string name="google_maps_key">AIzaSyARhggcqoMhuKntCXdVeFiE72_R5xybE_k</string>
+    <string name="facebook_app_id">612180276053606</string>
+    <string name="fb_login_protocol_scheme">fb612180276053606</string>
+
 </resources>

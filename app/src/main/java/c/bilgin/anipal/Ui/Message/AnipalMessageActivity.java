@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -56,6 +57,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private List<AnipalMessage> messages;
     private AnipalMessageAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
 
@@ -115,6 +117,7 @@ public class AnipalMessageActivity extends AppCompatActivity {
         imageButtonPickFromGallery = findViewById(R.id.imageButtonPickFromGallery);
         editTextMessage = findViewById(R.id.editTextMessage);
         recyclerView = findViewById(R.id.recyclerViewMessages);
+        swipeRefreshLayout = findViewById(R.id.swipeOldMessages);
 
         /*
          * these intent models comes if you are trying to start a new chat
@@ -143,6 +146,14 @@ public class AnipalMessageActivity extends AppCompatActivity {
         });
 
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadOldMessages(messages,adapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         imageButtonPickFromGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -166,12 +177,41 @@ public class AnipalMessageActivity extends AppCompatActivity {
         ref.child(m.getMessageUUID()).setValue(m);
     }
 
+    private void loadOldMessages(final List<AnipalMessage> messages,
+                                 final AnipalMessageAdapter adapter/*,
+                                 int start, int end*/){
+        /*
+        * load 20 old messages when user scrolls to first message.
+        * if we know that how many messages exists.
+        * */
+        Query q = FirebaseDatabase.getInstance().getReference("ChatRooms")
+                .child(MainActivity.currentUser.getUserUUID()).child(userUUID)
+                .child("messages").orderByChild("sendDate");
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                messages.clear();
+                for(DataSnapshot sp : dataSnapshot.getChildren()) {
+                    if(sp.hasChild("photoURL"))
+                        messages.add(sp.getValue(PhotoMessage.class));
+                    else messages.add(sp.getValue(TextMessage.class));
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void loadMessages(final List<AnipalMessage> messages, final AnipalMessageAdapter adapter){
         // We're on a chat room right now.
         // so load messages from a chatRoom
         Query q= FirebaseDatabase.getInstance().getReference("ChatRooms")
                 .child(MainActivity.currentUser.getUserUUID()).child(userUUID)
-                .child("messages").orderByChild("sendDate");
+                .child("messages").orderByChild("sendDate").limitToLast(20);
         q.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

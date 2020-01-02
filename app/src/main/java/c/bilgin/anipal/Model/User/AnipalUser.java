@@ -39,7 +39,7 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
             ,String lastName,String photoURL,Date birthday){
 
         // control isCreated situation...
-        this.coin = new AnipalCoin(1000); // give 1000 anipal coin when account created or don't give any.
+        this.coin = new AnipalCoin(0); // give 1000 anipal coin when account created or don't give any.
         // if there is a transformation on money like anipal to -> real money, don't give any anipal coin to user.
 
         // you can control it for email verification or if you start money process
@@ -138,6 +138,10 @@ public class AnipalUser implements AnipalCreateUser,AnipalUserController,AnipalU
     public void makeDonation(int m) throws NoMoneyException{
         if(hasMoney(m)) coin.makeDonation(m);
         else throw new NoMoneyException();
+    }
+
+    public void setBirthday(long birthday) {
+        this.birthday = birthday;
     }
 
     public void setJob(String job) {

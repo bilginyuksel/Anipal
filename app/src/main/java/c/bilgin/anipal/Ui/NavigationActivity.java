@@ -4,7 +4,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +18,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
 
-import c.bilgin.anipal.Model.Message.AnipalMessage;
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.Account.AnipalAccountFragment;
 import c.bilgin.anipal.Ui.Account.AnipalExploreFragment;
 import c.bilgin.anipal.Ui.Account.MainActivity;
-import c.bilgin.anipal.Ui.Message.AnipalMessageActivity;
 import c.bilgin.anipal.Ui.Message.AnipalMessagesFragment;
 import c.bilgin.anipal.Ui.Post.AnipalAddPostFragment;
 import c.bilgin.anipal.Ui.Post.AnipalHomeFragment;
@@ -97,6 +99,12 @@ public class NavigationActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 // forget shared preferences // delete temp db
 
+                FirebaseAuth.getInstance().signOut();
+                // Facebook logout
+                LoginManager.getInstance().logOut();
+                // Google logout
+                MainActivity.mGoogleSignInClient.signOut();
+
                 // maybe it can't clean look how we did that
                 MainActivity.sharedPreferences.edit().clear().commit();
                 Intent i1 = new Intent(NavigationActivity.this, MainActivity.class);
@@ -106,6 +114,7 @@ public class NavigationActivity extends AppCompatActivity {
                 fragmentTransaction = null;
                 AnipalHomeFragment.getInstance().kill();
                 AnipalMessagesFragment.getInstance().kill();
+
                 startActivity(i1);
             }
         });
