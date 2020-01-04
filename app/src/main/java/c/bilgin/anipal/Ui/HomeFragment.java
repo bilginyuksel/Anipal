@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +15,13 @@ import c.bilgin.anipal.Adapters.HomePageAdapter;
 import c.bilgin.anipal.R;
 
 public class HomeFragment extends Fragment {
-    private static HomeFragment instance = new HomeFragment();
+    private static HomeFragment instance = null;
     private HomeFragment(){ }
 
     public static HomeFragment getInstance(){
+        if(instance==null)
+            instance = new HomeFragment();
+
         return instance;
     }
     public ViewPager pager;
@@ -33,6 +35,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
+    public void kill(){instance = null;}
 
     @Nullable
     @Override

@@ -38,11 +38,14 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
         }
 
         public void bindType(final AnipalUser user){
-            textViewFullName.setText(user.getFirstName() + " "+ user.getLastName());
-            if(user.getPhotoURL()!=null)
-                Picasso.get().load(user.getPhotoURL()).fit().into(imageViewProfilePhoto);
+            if(user!=null){
+                textViewFullName.setText(user.getFirstName()!=null?user.getFirstName():"" + " "+ user.getLastName()!=null?user.getLastName():"");
+                if(user.getPhotoURL()!=null)
+                    Picasso.get().load(user.getPhotoURL()).fit().into(imageViewProfilePhoto);
 
-            textViewEmail.setText(user.getEmailAddress());
+                textViewEmail.setText(user.getEmailAddress());
+            }
+
 
 
         }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ public class AnipalExploreFragment extends Fragment {
     private AutoCompleteTextView autoCompleteTextView;
     private List<AnipalUser> anipalUsers;
     private Context mContext;
+    private TextView txtClear;
 
     private DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -59,6 +61,7 @@ public class AnipalExploreFragment extends Fragment {
         linearLayout = (LinearLayout) inflater.inflate(R.layout.fragment_explore,null);
         recyclerViewUsers = linearLayout.findViewById(R.id.recyclerViewUsers);
         autoCompleteTextView = linearLayout.findViewById(R.id.autoCompleteTextView);
+        txtClear = linearLayout.findViewById(R.id.txtClear);
         anipalUsers = new ArrayList<>();
         anipalUserAdapter = new AnipalUserAdapter(getContext(), anipalUsers, new OnItemClickListener() {
             @Override
@@ -80,6 +83,13 @@ public class AnipalExploreFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerViewUsers.setLayoutManager(linearLayoutManager);
+
+        txtClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                autoCompleteTextView.getText().clear();
+            }
+        });
 
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {

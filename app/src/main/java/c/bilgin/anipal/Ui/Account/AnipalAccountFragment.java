@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.Timestamp;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +38,7 @@ import java.util.TimeZone;
 
 import c.bilgin.anipal.R;
 import c.bilgin.anipal.Ui.CropActivity;
+import c.bilgin.anipal.Ui.Post.AnipalPostUploadActivity;
 
 
 public class AnipalAccountFragment extends Fragment {
@@ -61,7 +68,7 @@ public class AnipalAccountFragment extends Fragment {
     private void initialize(){
         textViewFullname = linearLayout.findViewById(R.id.textViewFullname);
         imageViewProfilePhoto = linearLayout.findViewById(R.id.imageViewProfilePhoto);
-        textViewStartedDonationCount = linearLayout.findViewById(R.id.textViewStartedDonationCount);
+        // textViewStartedDonationCount = linearLayout.findViewById(R.id.textViewStartedDonationCount);
         textViewFedAnimals = linearLayout.findViewById(R.id.textViewFedAnimals);
         textViewFollowerCount = linearLayout.findViewById(R.id.textViewFollowerCount);
         imageButtonProfileEdit = linearLayout.findViewById(R.id.imageButtonProfileEdit);
@@ -84,14 +91,15 @@ public class AnipalAccountFragment extends Fragment {
 
         textViewFollowerCount.setText(""+MainActivity.currentUser.getFollowers().size());
         // Update these values this values are complex.
-        textViewStartedDonationCount.setText(""+MainActivity.currentUser.getPosts().size());
+        // textViewStartedDonationCount.setText(""+MainActivity.currentUser.getPosts().size());
         textViewFedAnimals.setText(""+MainActivity.currentUser.getDonations().size());
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(MainActivity.currentUser.getBirthday());
 
+
         textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)));
+        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
         textViewYear.setText(""+c.get(Calendar.YEAR));
 
         textViewPet.setText(MainActivity.currentUser.getPet()!=null?MainActivity.currentUser.getPet():"");
@@ -137,6 +145,43 @@ public class AnipalAccountFragment extends Fragment {
         return linearLayout;
     }
 
+    String currentPhotoPath;
+    private File createImageFile() throws IOException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_"+timestamp+"_";
+        File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+    private void dispatchTakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                        "c.bilgin.anipal.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_INTENT_RESULT_CODE);
+            }
+        }
+
+    }
     private void choosePhotoOption(){
         Dialog d = new Dialog(getContext());
         d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -153,14 +198,8 @@ public class AnipalAccountFragment extends Fragment {
             public void onClick(View view) {
                 // Camera intent
                 // Issue
-                Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(i,CAMERA_INTENT_RESULT_CODE);
+                dispatchTakePictureIntent();
 
-                // Intent i = new Intent(getContext(),CropActivity.class);
-                // code 1 means that you are coming this intent
-                // to change profile picture via capturing image by camera
-                // i.putExtra("code",1001);
-                // startActivity(i);
             }
         });
 
@@ -197,10 +236,15 @@ public class AnipalAccountFragment extends Fragment {
                 i.putExtra("code",1000);
                 startActivity(i);
             }else if(requestCode == CAMERA_INTENT_RESULT_CODE){
-                Intent i = new Intent(getContext(),CropActivity.class);
-                i.putExtras(data);
-                i.putExtra("code",1001);
+                File f = new File(currentPhotoPath);
+                Uri uri = Uri.fromFile(f);
+                System.out.println(uri);
+                // Capture image from camera and send it to upload activity
+                Intent i = new Intent(getActivity(), CropActivity.class);
+                i.setData(uri);
+                i.putExtra("code",1000);
                 startActivity(i);
+
             }
     }
 }

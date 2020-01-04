@@ -28,7 +28,7 @@ function loadOldPosts(currentUserUid, followedUserUid){
 
 }
 
-function sendNotification(userUid,title, message){
+function sendNotification(userUid,title, message,tag){
     /**
      * send notification to the user and by the way
      * create a notification node.
@@ -37,12 +37,16 @@ function sendNotification(userUid,title, message){
         notification:{
             title:title,
             body:message
+        },
+        data:{
+            tag:tag
         }
     };
 
 
     notf = {
         "title":title,
+        "tag":tag,
         "message":message,
         "userUID":userUid,
         "timestamp":new Date().getTime(),
@@ -133,7 +137,6 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
             }
             return isReadCounter;
         });
-        refChatRoom
         /*
         send notification to receiver
         notification stuff here */
@@ -141,7 +144,9 @@ exports.createChatRoom = functions.database.ref("Messages/{messageUUID}")
         admin.database().ref("/Users").child(sender).once("value",(data)=>{
             const val = data.val();
             const fullname = val.firstName + " "+val.lastName;
-            sendNotification(receiver,fullname,messageData.message);
+            sendNotification(receiver,fullname,messageData.message,"MESSAGE");
+        }).catch(err =>{
+            console.log(err);
         });
         // sendNotification(receiver,"Bir mesajınız var.",messageData.message);
 
@@ -186,7 +191,9 @@ exports.followUserListener = functions.database.ref("Users/{userUUID}/following/
         admin.database().ref("/Users").child(currentUserUid).once("value",(data)=>{
             const val = data.val();
             const fullname = val.firstName + " "+ val.lastName;
-            sendNotification(followedUid,"Yeni bir takipiçiniz var.",fullname+" sizi takip etmeye başladı.");
+            sendNotification(followedUid,"Yeni bir takipiçiniz var.",fullname+" sizi takip etmeye başladı.","USER");
+        }).catch(err=>{
+            console.log(err)
         });
         // Control if any issue or not !
         // sendNotification(followedUid,"Yeni bir takipçiniz var.","Yeni bir takipçiniz var.");
@@ -232,7 +239,7 @@ exports.postLikeListener = functions.database.ref("Posts/{postUUID}/likers/{like
                 const v = dat.val();
                 const first_name = v.firstName;
                 const last_name = v.lastName;
-                sendNotification(userUUID,"Anipal",first_name+" "+last_name+" paylaştığınız bir gönderiyi beğendi.");
+                sendNotification(userUUID,"Anipal",first_name+" "+last_name+" paylaştığınız bir gönderiyi beğendi.","POST");
             });
         });
     });
@@ -248,7 +255,7 @@ exports.postCommentListener = functions.database.ref("Posts/{postUUID}/comments/
             const val = data.val();
             const userUUID = val.userUUID;
             const fullname = commentValue.senderName;
-            sendNotification(userUUID,fullname+" paylaştığınız bir gönderiye yorum yaptı.",commentValue.comment);
+            sendNotification(userUUID,fullname+" paylaştığınız bir gönderiye yorum yaptı.",commentValue.comment,"POST");
         });
 
         // const fullname = commentValue.senderName;
@@ -336,7 +343,7 @@ exports.makeDonationListener = functions.database.ref("/Users/{userUUID}/donatio
                 const str = fullname+" bağış barınıza "+donationPrice+" pati katkıda bulundu.";
                 console.log("Notification : ",str);
                 console.log("Post Owner : ",postOwnerUUID);
-                sendNotification(postOwnerUUID,"Bağış Barı",str);
+                sendNotification(postOwnerUUID,"Bağış Barı",str,"DONATION");
             });
         });
         

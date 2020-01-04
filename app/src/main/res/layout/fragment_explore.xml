@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="7"
                 android:layout_marginTop="12dp"
+                android:id="@+id/txtClear"
                 android:textSize="14dp"
                 android:text="İptal"/>
 

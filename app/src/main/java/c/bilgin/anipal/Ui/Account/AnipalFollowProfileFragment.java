@@ -90,7 +90,9 @@ public class AnipalFollowProfileFragment extends Fragment {
         if(buttonFollowUser.getText().toString().equals("Takip Et")){
             buttonFollowUser.setText("Takibi Bırak");
             user.getFollowers().add(MainActivity.currentUser.getUserUUID());
-            MainActivity.currentUser.getFollowing().add(user.getUserUUID());
+
+            if(!MainActivity.currentUser.getFollowing().contains(user.getUserUUID()))
+                MainActivity.currentUser.getFollowing().add(user.getUserUUID());
         }else{
             buttonFollowUser.setText("Takip Et");
             user.getFollowers().remove(MainActivity.currentUser.getUserUUID());
@@ -127,7 +129,7 @@ public class AnipalFollowProfileFragment extends Fragment {
     private void initialize(){
         textViewFullname = linearLayout.findViewById(R.id.textViewFullname);
         imageViewProfilePhoto = linearLayout.findViewById(R.id.imageViewProfilePhoto);
-        textViewStartedDonationCount = linearLayout.findViewById(R.id.textViewStartedDonationCount);
+        // textViewStartedDonationCount = linearLayout.findViewById(R.id.textViewStartedDonationCount);
         textViewFedAnimals = linearLayout.findViewById(R.id.textViewFedAnimals);
         textViewFollowerCount = linearLayout.findViewById(R.id.textViewFollowerCount);
         imageButtonProfileEdit = linearLayout.findViewById(R.id.imageButtonProfileEdit);
@@ -148,14 +150,14 @@ public class AnipalFollowProfileFragment extends Fragment {
 
         textViewFollowerCount.setText(""+user.getFollowers().size());
         // Update these values this values are complex.
-        textViewStartedDonationCount.setText(""+user.getPosts().size());
+        // textViewStartedDonationCount.setText(""+user.getPosts().size());
         textViewFedAnimals.setText(""+user.getDonations().size());
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(user.getBirthday());
 
         textViewDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)));
+        textViewMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
         textViewYear.setText(""+c.get(Calendar.YEAR));
 
         textViewPet.setText(user.getPet()!=null?user.getPet():"");

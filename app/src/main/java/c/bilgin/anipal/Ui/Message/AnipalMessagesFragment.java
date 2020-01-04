@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import c.bilgin.anipal.Adapters.Message.AnipalChatRoomAdapter;
@@ -41,6 +42,7 @@ public class AnipalMessagesFragment extends Fragment {
     private ImageButton im;
     private RecyclerView recyclerViewChatRooms, recyclerViewFreqRooms;
     public static List<AnipalChatRoom> chatRooms;
+    public static List<AnipalChatRoom> freqRoom;
     private AnipalChatRoomAdapter chatRoomAdapter;
     private AnipalFreqRoomAdapter freqRoomAdapter;
     private ScrollView scrollView;
@@ -48,7 +50,10 @@ public class AnipalMessagesFragment extends Fragment {
     private static AnipalMessagesFragment instance = null;
 
     private AnipalMessagesFragment(){
-        if(chatRooms == null) chatRooms = new ArrayList<>();
+        if(chatRooms == null) {
+            chatRooms = new ArrayList<>();
+            freqRoom = new ArrayList<>();
+        }
         loadChatRooms(chatRooms);
     }
 
@@ -93,10 +98,10 @@ public class AnipalMessagesFragment extends Fragment {
                 gotoChatRoom(chatRooms.get(pos));
             }
         });
-        freqRoomAdapter = new AnipalFreqRoomAdapter(getContext(), chatRooms, new OnItemClickListener() {
+        freqRoomAdapter = new AnipalFreqRoomAdapter(getContext(), freqRoom, new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
-                gotoChatRoom(chatRooms.get(pos));
+                gotoChatRoom(freqRoom.get(pos));
             }
         });
 
@@ -172,12 +177,18 @@ public class AnipalMessagesFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatRooms.clear();
+                freqRoom.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
                     chatRooms.add(snapshot.getValue(AnipalChatRoom.class));
                     // Chat Room Adapter refresh, I tried once, 20:00
                     if(chatRoomAdapter!=null) chatRoomAdapter.notifyDataSetChanged();
 
                 }
+
+                // Declare freq speakers
+                for ( AnipalChatRoom c : chatRooms )
+                    if((c.getLastMessageDate()+604800000)>=new Date().getTime())freqRoom.add(c);
+                if(freqRoomAdapter!=null) freqRoomAdapter.notifyDataSetChanged();
             }
 
             @Override

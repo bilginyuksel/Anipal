@@ -76,6 +76,7 @@
             android:layout_weight="7"
             android:layout_marginTop="10dp"
             android:textSize="16dp"
+            android:id="@+id/txtClear"
             android:text="İptal"/>
 
     </LinearLayout>

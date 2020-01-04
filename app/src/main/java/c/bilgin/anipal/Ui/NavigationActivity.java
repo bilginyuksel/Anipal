@@ -31,6 +31,7 @@ public class NavigationActivity extends AppCompatActivity {
     // private FrameLayout frameLayout;
     public static FragmentManager fragmentManager;
     public static FragmentTransaction fragmentTransaction;
+    public static String LIVING_FRAGMENT;
 
     // Create all objects here.
     // You can use singleton design pattern for all of them
@@ -44,16 +45,19 @@ public class NavigationActivity extends AppCompatActivity {
                 case R.id.navigation_messages:
                     fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.main_frame_layout, AnipalMessagesFragment.getInstance());
+                    LIVING_FRAGMENT = "MESSAGE";
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_explore:
                     fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.main_frame_layout,new AnipalExploreFragment());
+                    LIVING_FRAGMENT = "EXPLORE";
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_add_post:
                     fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.main_frame_layout,new AnipalAddPostFragment());
+                    LIVING_FRAGMENT = "POST";
                     fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_account:
@@ -64,6 +68,7 @@ public class NavigationActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.main_frame_layout,HomeFragment.getInstance());
+                    LIVING_FRAGMENT = "HOME";
                     fragmentTransaction.commit();
                     return true;
             }
@@ -83,6 +88,7 @@ public class NavigationActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.add(R.id.main_frame_layout,HomeFragment.getInstance());
         fragmentTransaction.commit();
+        LIVING_FRAGMENT = "HOME";
         navView.getMenu().findItem(R.id.navigation_home).setChecked(true);
 
     }
@@ -114,6 +120,7 @@ public class NavigationActivity extends AppCompatActivity {
                 fragmentTransaction = null;
                 AnipalHomeFragment.getInstance().kill();
                 AnipalMessagesFragment.getInstance().kill();
+                HomeFragment.getInstance().kill();
 
                 startActivity(i1);
             }

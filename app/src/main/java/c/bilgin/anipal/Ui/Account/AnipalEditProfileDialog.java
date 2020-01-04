@@ -60,7 +60,7 @@ public class AnipalEditProfileDialog extends Dialog {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(MainActivity.currentUser.getBirthday());
         editTextDayOfMonth.setText(""+c.get(Calendar.DAY_OF_MONTH));
-        editTextMonthOfYear.setText(""+c.get(Calendar.MONTH)+1);
+        editTextMonthOfYear.setText(""+(c.get(Calendar.MONTH)+1));
         editTextYear.setText(""+c.get(Calendar.YEAR));
 
         // Fill birthday too !

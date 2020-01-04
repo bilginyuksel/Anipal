@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences =this.getPreferences(Context.MODE_PRIVATE);
         String email =sharedPreferences.getString("Email","abipal@gmail.com");
-        String password = sharedPreferences.getString("Password","0000000");
+        String password = sharedPreferences.getString("Password","000000000000000000");
 
         if(!email.equals("abipal@gmail.com")){
             Intent i = new Intent(MainActivity.this, SplashScreen.class);
@@ -312,7 +312,6 @@ public class MainActivity extends AppCompatActivity {
                             String last_name = object.optString("last_name");
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             Date d = new Date();
-                            d.setTime(user.getMetadata().getCreationTimestamp());
 
                             outsideLoginFirebaseSync(new AnipalUser().createUser(user.getUid(),email_fb,
                                     first_name,last_name,
@@ -346,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
                             // Google sign-in success.
                             FirebaseUser user = task.getResult().getUser();
                             Date d = new Date();
-                            d.setTime(user.getMetadata().getCreationTimestamp());
 
                             outsideLoginFirebaseSync(new AnipalUser().createUser(user.getUid(),account.getEmail(),
                                     account.getGivenName(),account.getFamilyName(),

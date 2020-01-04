@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +36,10 @@ public class AnipalFindUsersToMessage extends AppCompatActivity {
     private AnipalUserAdapter anipalUserAdapter;
     private AutoCompleteTextView autoCompleteTextView;
     private List<AnipalUser> anipalUsers;
+    private List<AnipalUser> originalAnipalUsers;
     private ImageButton imageButtonBack;
+    private TextView txtClear;
+
 
     private DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -44,13 +50,53 @@ public class AnipalFindUsersToMessage extends AppCompatActivity {
         setContentView(R.layout.activity_anipal_find_users_to_message);
 
         initialize();
+
+        txtClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                autoCompleteTextView.getText().clear();
+            }
+        });
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Always search on original array
+                // and fill informations according to that array
+                anipalUsers.clear();
+                if(charSequence == null) {
+                    // i want to know if we achieving this
+                    System.out.println("CharSequence null");
+                    anipalUsers.addAll(originalAnipalUsers);
+                }
+                for(AnipalUser u : originalAnipalUsers){
+                    System.out.println("in loop");
+                    if(u.getFullname().contains(charSequence))
+                        anipalUsers.add(u);
+                }
+                anipalUserAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     private void initialize(){
         recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
         imageButtonBack = findViewById(R.id.imageButtonBack);
+        txtClear = findViewById(R.id.txtClear);
         anipalUsers = new ArrayList<>();
+        originalAnipalUsers = new ArrayList<>();
         anipalUserAdapter = new AnipalUserAdapter(this, anipalUsers, new OnItemClickListener() {
             @Override
             public void onItemClick(View v, int pos) {
@@ -83,6 +129,7 @@ public class AnipalFindUsersToMessage extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     users.add(dataSnapshot.getValue(AnipalUser.class));
+                    originalAnipalUsers.add(dataSnapshot.getValue(AnipalUser.class));
                     adapter.notifyDataSetChanged();
                 }
 

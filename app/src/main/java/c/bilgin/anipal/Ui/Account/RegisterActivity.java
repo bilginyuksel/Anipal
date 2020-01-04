@@ -134,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                 System.out.println("Year : "+i);
                 System.out.println("Month : "+i1);
                 System.out.println("Day : "+i2);
-                c.set(i,i1+1,i2,19,0);
+                c.set(i,i1,i2,19,0);
                 birthday = c.getTime();
                 System.out.println(birthday.toString());
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

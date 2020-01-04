@@ -15,6 +15,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import c.bilgin.anipal.Model.User.AnipalUser;
 import c.bilgin.anipal.R;
@@ -57,7 +62,8 @@ public class SplashScreen extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             // find the user information here.
-                            findUser(task.getResult().getUser().getUid());
+                            FirebaseUser u = task.getResult().getUser();
+                            findUser(u.getUid());
                         }
                     }
                 });
@@ -66,6 +72,18 @@ public class SplashScreen extends AppCompatActivity {
 
 
     }
+
+    private void updateMessageToken(final String uid){
+        final Map<String,Object> map = new HashMap<>();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                map.put("messageToken",task.getResult().getToken());
+                FirebaseDatabase.getInstance().getReference("Users").child(uid).updateChildren(map);
+            }
+        });
+    }
+
 
     private void findUser(String uid) {
         FirebaseDatabase.getInstance().getReference("Users").child(uid)
@@ -76,7 +94,7 @@ public class SplashScreen extends AppCompatActivity {
                         // use progress bar when data loading.
                         // because of fastly opening profile!!!
                         currentUser = dataSnapshot.getValue(AnipalUser.class);
-                        //updateMessageToken(currentUser.getUserUUID());
+                        updateMessageToken(currentUser.getUserUUID());
                         //progressDialog.dismiss();
                         AnipalMessagesFragment.getInstance();
                         AnipalHomeFragment.getInstance();
