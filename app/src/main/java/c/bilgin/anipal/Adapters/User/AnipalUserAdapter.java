@@ -42,6 +42,7 @@ public class AnipalUserAdapter extends RecyclerView.Adapter<AnipalUserAdapter.Vi
                 textViewFullName.setText(user.getFirstName()!=null?user.getFirstName():"" + " "+ user.getLastName()!=null?user.getLastName():"");
                 if(user.getPhotoURL()!=null)
                     Picasso.get().load(user.getPhotoURL()).fit().into(imageViewProfilePhoto);
+                else imageViewProfilePhoto.setImageResource(R.drawable.user);
 
                 textViewEmail.setText(user.getEmailAddress());
             }

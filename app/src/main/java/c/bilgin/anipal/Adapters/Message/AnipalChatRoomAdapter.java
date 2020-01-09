@@ -64,6 +64,7 @@ public class AnipalChatRoomAdapter extends RecyclerView.Adapter<AnipalChatRoomAd
                     String url = dataSnapshot.getValue(AnipalUser.class).getPhotoURL();
                     if(url!=null)
                     Picasso.get().load(url).fit().into(circularImageView);
+                    else circularImageView.setImageResource(R.drawable.user);
                 }
 
                 @Override

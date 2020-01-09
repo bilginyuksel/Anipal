@@ -82,7 +82,8 @@ public class AnipalFreqRoomAdapter extends RecyclerView.Adapter<AnipalFreqRoomAd
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String url = dataSnapshot.getValue(AnipalUser.class).getPhotoURL();
                     if(url!=null)
-                    Picasso.get().load(dataSnapshot.getValue(AnipalUser.class).getPhotoURL()).fit().into(circularImageView);
+                    Picasso.get().load(url).fit().into(circularImageView);
+                    else circularImageView.setImageResource(R.drawable.user);
                 }
 
                 @Override

@@ -5,8 +5,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
             , editTextPasswordConfirmation;
     private CheckBox checkBoxContract;
     private Button buttonRegister;
-    private TextView buttonBirthday;
+    private TextView buttonBirthday,textViewContract;
     private AnipalUser anipalUser;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference;
@@ -99,6 +102,17 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        textViewContract.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog d = new Dialog(RegisterActivity.this);
+                d.setContentView(R.layout.dialog_user_contract);
+                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                d.show();
+            }
+        });
     }
 
     private boolean isPasswordConfirmed(String pass1,String pass2){
@@ -115,6 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPasswordConfirmation = findViewById(R.id.editTextPasswordConfirmation);
         checkBoxContract = findViewById(R.id.checkBoxContract);
         buttonRegister = findViewById(R.id.buttonRegister);
+        textViewContract = findViewById(R.id.textViewContract);
 
         mAuth = FirebaseAuth.getInstance();
     }

@@ -84,6 +84,7 @@ public class ViewHolderDonation extends ViewHolder {
         // Set image with picasso.
         if(donationPost.getAnipalUser()!=null && donationPost.getAnipalUser().getPhotoURL() != null)
             Picasso.get().load(donationPost.getAnipalUser().getPhotoURL()).fit().into(imgButtonProfilePhoto);
+        else imgButtonProfilePhoto.setImageResource(R.drawable.user);
 
 
         buttonMakeDonation.setOnClickListener(new View.OnClickListener() {

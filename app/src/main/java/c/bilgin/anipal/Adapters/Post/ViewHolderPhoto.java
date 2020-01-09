@@ -133,6 +133,7 @@ public class ViewHolderPhoto extends ViewHolder {
         // Set image with picasso.
         if(photoPost.getAnipalUser()!=null && photoPost.getAnipalUser().getPhotoURL()!=null)
             Picasso.get().load(photoPost.getAnipalUser().getPhotoURL()).fit().into(imageButtonProfilePhoto);
+        else imageButtonProfilePhoto.setImageResource(R.drawable.user);
 
         imageButtonProfilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
