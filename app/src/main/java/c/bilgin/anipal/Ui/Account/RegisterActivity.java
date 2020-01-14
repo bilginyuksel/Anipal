@@ -1,7 +1,6 @@
 package c.bilgin.anipal.Ui.Account;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -10,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
-    private Date birthday;
+    private Date birthday = new Date();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,10 +137,8 @@ public class RegisterActivity extends AppCompatActivity {
         databaseReference.child(anipalUser.getUserUUID()).setValue(anipalUser);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void openDatePicker(View v){
-        DatePickerDialog dialog = new DatePickerDialog(this);
-        dialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 Calendar c = Calendar.getInstance();
@@ -154,9 +150,11 @@ public class RegisterActivity extends AppCompatActivity {
                 System.out.println(birthday.toString());
                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                 buttonBirthday.setText(""+format.format(birthday));
-
             }
-        });
+        };
+        DatePickerDialog dialog = new DatePickerDialog(this,d,1980,10,10);
+
+
         dialog.show();
     }
 }
